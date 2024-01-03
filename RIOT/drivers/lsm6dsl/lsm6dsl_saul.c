@@ -31,7 +31,7 @@ static int read_acc(const void *dev, phydat_t *res)
     }
 
     res->scale = -3;
-    res->unit = UNIT_G;
+    res->unit = UNIT_G_FORCE;
 
     return 3;
 }
@@ -62,18 +62,18 @@ static int read_temp(const void *dev, phydat_t *res)
 
 const saul_driver_t lsm6dsl_saul_acc_driver = {
     .read = read_acc,
-    .write = saul_notsup,
+    .write = saul_write_notsup,
     .type = SAUL_SENSE_ACCEL,
 };
 
 const saul_driver_t lsm6dsl_saul_gyro_driver = {
     .read = read_gyro,
-    .write = saul_notsup,
+    .write = saul_write_notsup,
     .type = SAUL_SENSE_GYRO,
 };
 
 const saul_driver_t lsm6dsl_saul_temp_driver = {
     .read = read_temp,
-    .write = saul_notsup,
+    .write = saul_write_notsup,
     .type = SAUL_SENSE_TEMP,
 };

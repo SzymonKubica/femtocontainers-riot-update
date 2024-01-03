@@ -106,7 +106,7 @@ static int dtls_handle_read(dtls_context_t *ctx)
 
     if (res <= 0) {
         if ((ENABLE_DEBUG) && (res != -EAGAIN) && (res != -ETIMEDOUT)) {
-            DEBUG("sock_udp_recv unexpected code error: %i\n", (int)res);
+            DEBUG("sock_udp_recv unexpected code error: %" PRIiSIZE "\n", res);
         }
         return 0;
     }
@@ -116,6 +116,7 @@ static int dtls_handle_read(dtls_context_t *ctx)
     /* (DTLS) session requires the remote peer address (IPv6:Port) and netif */
     dtls_session_init(&session);
     session.addr.port = remote_peer->remote->port;
+    session.addr.family = AF_INET6;
     if (remote_peer->remote->netif ==  SOCK_ADDR_ANY_NETIF) {
         session.ifindex = SOCK_ADDR_ANY_NETIF;
     }

@@ -1,11 +1,12 @@
 .PHONY: info-objsize info-buildsizes info-build info-boards-supported \
         info-features-missing info-modules info-cpu \
         info-features-provided info-features-required \
-        info-features-used \
+        info-features-used info-kconfig-variables \
         info-debug-variable-% info-toolchains-supported \
         check-toolchain-supported \
         info-programmers-supported \
-        create-Makefile.ci \
+        info-rust \
+        generate-Makefile.ci \
         #
 
 info-objsize:
@@ -82,13 +83,16 @@ info-build:
 	@echo -e 'INCLUDES:$(patsubst %, \n\t%, $(INCLUDES))'
 	@echo ''
 	@echo 'CC:      $(CC)'
-	@echo -e 'CFLAGS:$(patsubst %, \n\t%, $(CFLAGS))'
+	@echo 'CFLAGS:$(patsubst %, \n\t%, $(subst ','"'"',$(CFLAGS)))'
 	@echo ''
 	@echo 'CXX:     $(CXX)'
 	@echo -e 'CXXUWFLAGS:$(patsubst %, \n\t%, $(CXXUWFLAGS))'
 	@echo -e 'CXXEXFLAGS:$(patsubst %, \n\t%, $(CXXEXFLAGS))'
 	@echo ''
 	@echo 'RUST_TARGET: $(RUST_TARGET)'
+	@echo 'CARGO_CHANNEL: $(CARGO_CHANNEL)'
+	@echo 'CARGO_PROFILE: $(CARGO_PROFILE)'
+	@echo 'CARGO_OPTIONS: $(CARGO_OPTIONS)'
 	@echo ''
 	@echo 'LINK:    $(LINK)'
 	@echo -e 'LINKFLAGS:$(patsubst %, \n\t%, $(LINKFLAGS))'
@@ -101,6 +105,7 @@ info-build:
 	@echo ''
 	@echo 'TERMPROG:  $(TERMPROG)'
 	@echo 'TERMFLAGS: $(TERMFLAGS)'
+	@echo 'TERMENV:   $(TERMENV)'
 	@echo 'PORT:      $(PORT)'
 	@echo 'PROG_DEV:  $(PROG_DEV)'
 	@echo ''
@@ -113,6 +118,9 @@ info-build:
 	@echo ''
 	@echo 'DEBUGSERVER:       $(DEBUGSERVER)'
 	@echo 'DEBUGSERVER_FLAGS: $(DEBUGSERVER_FLAGS)'
+	@echo ''
+	@echo 'DEBUGCLIENT:       $(DEBUGCLIENT)'
+	@echo 'DEBUGCLIENT_FLAGS: $(DEBUGCLIENT_FLAGS)'
 	@echo ''
 	@echo 'RESET:       $(RESET)'
 	@echo 'RESET_FLAGS: $(RESET_FLAGS)'
@@ -224,6 +232,11 @@ info-features-missing:
 info-features-used:
 	@for i in $(FEATURES_USED); do echo $$i; done
 
+# This target prints all variables set via KConfig sorted alphabetically for
+# debugging.
+info-kconfig-variables:
+	@for i in $(sort $(filter CONFIG_%,$(.VARIABLES))); do echo $$i; done
+
 info-debug-variable-%:
 	@echo $($*)
 
@@ -235,3 +248,7 @@ check-toolchain-supported:
 
 info-programmers-supported:
 	@echo $(sort $(PROGRAMMERS_SUPPORTED))
+
+info-rust:
+	cargo $(patsubst +,,+${CARGO_CHANNEL}) version
+	c2rust --version

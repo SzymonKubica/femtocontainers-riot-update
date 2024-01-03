@@ -1,4 +1,4 @@
-export DOCKER_IMAGE ?= riot/riotbuild:latest
+export DOCKER_IMAGE ?= docker.io/riot/riotbuild:latest
 export DOCKER_BUILD_ROOT ?= /data/riotbuild
 DOCKER_RIOTBASE ?= $(DOCKER_BUILD_ROOT)/riotbase
 # List of Docker-enabled make goals
@@ -47,8 +47,8 @@ export DOCKER_ENV_VARS += \
   CXXUWFLAGS \
   $(DOCKER_RIOT_CONFIG_VARIABLES) \
   ELFFILE \
-  HEXFILE \
   FLASHFILE \
+  HEXFILE \
   IOTLAB_NODE \
   LINK \
   LINKFLAGPREFIX \
@@ -57,20 +57,20 @@ export DOCKER_ENV_VARS += \
   OBJCOPY \
   OFLAGS \
   PARTICLE_MONOFIRMWARE \
-  PREFIX \
-  QUIET \
-  WERROR \
   PICOLIBC \
+  PREFIX \
   PROGRAMMER \
+  QUIET \
   RIOT_CI_BUILD \
   RIOT_VERSION \
   RIOT_VERSION_CODE \
   SCANBUILD_ARGS \
   SCANBUILD_OUTPUTDIR \
   SIZE \
-  TOOLCHAIN \
   TEST_KCONFIG \
+  TOOLCHAIN \
   UNDEF \
+  WERROR \
   #
 
 # List of all exported environment variables that shall be passed on to the
@@ -118,13 +118,15 @@ DOCKER_OVERRIDE_CMDLINE += $(strip $(DOCKER_OVERRIDE_CMDLINE_AUTO))
 
 # Overwrite if you want to use `docker` with sudo
 DOCKER ?= docker
+_docker_is_podman = $(shell $(DOCKER) --version | grep podman 2>/dev/null)
 
 # Set default run flags:
 # - allocate a pseudo-tty
 # - remove container on exit
 # - set username/UID to executor
 DOCKER_USER ?= $$(id -u)
-DOCKER_RUN_FLAGS ?= --rm --tty --user $(DOCKER_USER)
+DOCKER_USER_OPT = $(if $(_docker_is_podman),--userns keep-id,--user $(DOCKER_USER))
+DOCKER_RUN_FLAGS ?= --rm --tty $(DOCKER_USER_OPT)
 
 # allow setting make args from command line like '-j'
 DOCKER_MAKE_ARGS ?=

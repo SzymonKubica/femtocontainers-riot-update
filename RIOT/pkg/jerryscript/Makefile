@@ -1,6 +1,7 @@
 PKG_NAME=jerryscript
 PKG_URL=https://github.com/jerryscript-project/jerryscript.git
-PKG_VERSION=8ba0d1b6ee5a065a42f3b306771ad8e3c0d819bc  # 2.4.0
+# 2.4.0
+PKG_VERSION=8ba0d1b6ee5a065a42f3b306771ad8e3c0d819bc
 PKG_LICENSE=Apache-2.0
 
 include $(RIOTBASE)/pkg/pkg.mk
@@ -21,10 +22,9 @@ ifeq ($(TOOLCHAIN)_$(BOARD),llvm_native)
 else ifeq ($(OS)_$(BOARD),FreeBSD_native)
   EXT_CFLAGS += -Wno-conversion
 else ifeq (esp32,$(CPU))
-  # The esp32 C newlib version 2.2.0 has errors when compiling with warnings
-  # that are enabled by jerryscript build system so disable them for this cpu:
-  #  * -Wundef: stdio.h: `__GNU_VISIBLE` and `__BSD_VISIBLE` are not defined
-  EXT_CFLAGS += -Wno-undef -Wno-error=undef
+  # The ESP-IDF uses #include_next that causes errors when compiling with warnings
+  # that are enabled by jerryscript build system so disable them for these CPUs:
+  EXT_CFLAGS += -Wno-pedantic
 else ifeq (esp8266,$(CPU))
   # The esp8266 C newlib version 3.0.0 has errors when compiling with warnings
   # that are enabled by jerryscript build system so disable them for this cpu:

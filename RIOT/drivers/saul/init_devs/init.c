@@ -187,6 +187,10 @@ void saul_init_devs(void)
         extern void auto_init_lpsxxx(void);
         auto_init_lpsxxx();
     }
+    if (IS_USED(MODULE_LSM303AGR)) {
+        extern void auto_init_lsm303agr(void);
+        auto_init_lsm303agr();
+    }
     if (IS_USED(MODULE_LSM303DLHC)) {
         extern void auto_init_lsm303dlhc(void);
         auto_init_lsm303dlhc();
@@ -330,5 +334,13 @@ void saul_init_devs(void)
     if (IS_USED(MODULE_VEML6070)) {
         extern void auto_init_veml6070(void);
         auto_init_veml6070();
+    }
+    if (IS_USED(MODULE_VL6180X)) {
+        extern void auto_init_vl6180x(void);
+        auto_init_vl6180x();
+    }
+    if (IS_USED(MODULE_SERVO)) {
+        extern void auto_init_servo(void);
+        auto_init_servo();
     }
 }

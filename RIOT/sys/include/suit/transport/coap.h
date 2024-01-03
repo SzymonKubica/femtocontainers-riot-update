@@ -26,6 +26,7 @@
 #define SUIT_TRANSPORT_COAP_H
 
 #include "net/nanocoap.h"
+#include "suit/transport/worker.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,8 +34,12 @@ extern "C" {
 
 /**
  * @brief    Start SUIT CoAP thread
+ *
+ * @deprecated This will be removed after after the 2023.01 release.
  */
-void suit_coap_run(void);
+static inline void suit_coap_run(void)
+{
+}
 
 /**
  * @brief SUIT CoAP endpoint entry.
@@ -76,16 +81,22 @@ extern const coap_resource_subtree_t coap_resource_subtree_suit;
  * @brief Coap block-wise-transfer size used for SUIT
  */
 #ifndef CONFIG_SUIT_COAP_BLOCKSIZE
-#define CONFIG_SUIT_COAP_BLOCKSIZE  COAP_BLOCKSIZE_64
+#define CONFIG_SUIT_COAP_BLOCKSIZE  CONFIG_NANOCOAP_BLOCKSIZE_DEFAULT
 #endif
 
 /**
  * @brief   Trigger a SUIT udate
  *
+ * @deprecated This is an alias for @ref suit_worker_trigger and will be removed
+ *             after after the 2023.01 release.
+ *
  * @param[in] url       url pointer containing the full coap url to the manifest
  * @param[in] len       length of the url
  */
-void suit_coap_trigger(const uint8_t *url, size_t len);
+static inline void suit_coap_trigger(const uint8_t *url, size_t len)
+{
+    suit_worker_trigger((const char *)url, len);
+}
 
 #endif /* DOXYGEN */
 

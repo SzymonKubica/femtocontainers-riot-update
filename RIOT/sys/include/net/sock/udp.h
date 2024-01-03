@@ -268,6 +268,7 @@
 #ifndef NET_SOCK_UDP_H
 #define NET_SOCK_UDP_H
 
+#include <assert.h>
 #include <errno.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -280,7 +281,10 @@
 # pragma clang diagnostic ignored "-Wtypedef-redefinition"
 #endif
 
+#include "net/af.h"
 #include "net/sock.h"
+#include "net/ipv4/addr.h"
+#include "net/ipv6/addr.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -291,7 +295,7 @@ typedef struct _sock_tl_ep sock_udp_ep_t;   /**< An end point for a UDP sock obj
 /**
  * @brief   Type for a UDP sock object
  *
- * @note    API implementors: `struct sock_udp` needs to be defined by
+ * @note    API implementers: `struct sock_udp` needs to be defined by
  *         implementation-specific `sock_types.h`.
  */
 typedef struct sock_udp sock_udp_t;
@@ -328,6 +332,14 @@ typedef struct {
      */
     int16_t rssi;
 #endif /* MODULE_SOCK_AUX_RSSI */
+#if defined(MODULE_SOCK_AUX_TTL) || defined(DOXYGEN)
+    /**
+     * @brief   TTL value of the received frame
+     *
+     * @see SOCK_AUX_GET_TTL
+     */
+    uint8_t ttl;
+#endif /* MODULE_SOCK_AUX_TTL */
     sock_aux_flags_t flags; /**< Flags used request information */
 } sock_udp_aux_rx_t;
 
@@ -335,6 +347,14 @@ typedef struct {
  * @brief   Auxiliary data provided when sending using an UDP sock object
  */
 typedef struct {
+#if defined(MODULE_SOCK_AUX_LOCAL) || defined(DOXYGEN)
+    /**
+     * @brief   The local endpoint from which the datagram will be sent
+     *
+     * @see SOCK_AUX_SET_LOCAL
+     */
+    sock_udp_ep_t local;
+#endif /* MODULE_SOCK_AUX_ENDPOINT */
 #if defined(MODULE_SOCK_AUX_TIMESTAMP) || defined(DOXYGEN)
     /**
      * @brief   System time the datagram was send
@@ -358,6 +378,13 @@ typedef struct {
  *
  * @pre `(sock != NULL)`
  * @pre `(remote == NULL) || (remote->port != 0)`
+ *
+ * @warning If you create a socket you are responsible for receiving messages
+ *          sent to it by calling @ref sock_udp_recv.
+ *          Otherwise, the packet queue of the @p sock may congest until the
+ *          socket is closed.
+ *          If you only want to send without receiving, use @ref sock_udp_send
+ *          instead with `sock` set to NULL.
  *
  * @param[out] sock     The resulting sock object.
  * @param[in] local     Local end point for the sock object.
@@ -683,8 +710,9 @@ static inline ssize_t sock_udp_send_aux(sock_udp_t *sock,
                                         sock_udp_aux_tx_t *aux)
 {
     const iolist_t snip = {
-        .iol_base = (void *)data,
-        .iol_len  = len,
+        NULL,
+        (void *)data,
+        len,
     };
 
     return sock_udp_sendv_aux(sock, &snip, remote, aux);
@@ -767,6 +795,31 @@ static inline ssize_t sock_udp_sendv(sock_udp_t *sock,
                                      const sock_udp_ep_t *remote)
 {
     return sock_udp_sendv_aux(sock, snips, remote, NULL);
+}
+
+/**
+ * @brief   Checks if the IP address of an endpoint is multicast
+ *
+ * @param[in] ep end point to check
+ *
+ * @returns true if end point is multicast
+ */
+static inline bool sock_udp_ep_is_multicast(const sock_udp_ep_t *ep)
+{
+    switch (ep->family) {
+#ifdef SOCK_HAS_IPV6
+    case AF_INET6:
+        return ipv6_addr_is_multicast((const ipv6_addr_t *)&ep->addr.ipv6);
+#endif
+#ifdef SOCK_HAS_IPV4
+    case AF_INET:
+        return ipv4_addr_is_multicast((const ipv4_addr_t *)&ep->addr.ipv4);
+#endif
+    default:
+        assert(0);
+    }
+
+    return false;
 }
 
 #include "sock_types.h"

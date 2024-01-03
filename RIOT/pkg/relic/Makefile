@@ -15,6 +15,11 @@ CFLAGS += -Wno-unused-function -Wno-old-style-definition -Wno-unused-parameter \
           -Wno-pedantic -Wno-array-parameter -Wno-unused-but-set-variable \
           -Wno-stringop-overflow
 
+ifeq (llvm,$(TOOLCHAIN))
+  CFLAGS += $(GCC_C_INCLUDES)
+  CXXFLAGS += $(GCC_CXX_INCLUDES)
+endif
+
 TOOLCHAIN_FILE = $(PKG_SOURCE_DIR)/xcompile-toolchain.cmake
 
 all: $(BINDIR)/$(PKG_NAME).a
@@ -31,7 +36,7 @@ $(PKG_BUILD_DIR)/lib/librelic_s.a: $(PKG_BUILD_DIR)/Makefile
 
 # Pass 'COMP' with a target specific export to not have issues with the shell
 # escaping evaluation.
-COMP = $(filter-out -Werror -Werror=old-style-definition -Werror=strict-prototypes -std=gnu11,$(CFLAGS))
+COMP = $(filter-out -Werror=old-style-definition -Werror=strict-prototypes -std=gnu11,$(CFLAGS))
 $(PKG_BUILD_DIR)/Makefile: export COMP ?=
 $(PKG_BUILD_DIR)/Makefile: $(PKG_PREPARED) $(TOOLCHAIN_FILE) | ..cmake_version_supported
 	cmake -B$(PKG_BUILD_DIR) -H$(PKG_SOURCE_DIR) \

@@ -33,8 +33,14 @@
 
 #include "suit/storage.h"
 #include "suit/storage/ram.h"
+#ifdef BOARD_NATIVE
+#include "suit/storage/vfs.h"
+#include "xfa.h"
+#include "vfs_default.h"
+#endif
 
 #ifdef MODULE_PERIPH_GPIO
+#include "board.h"
 #include "periph/gpio.h"
 #endif
 
@@ -47,6 +53,15 @@ static msg_t _nanocoap_server_msg_queue[NANOCOAP_SERVER_QUEUE_SIZE];
 
 #define MAIN_QUEUE_SIZE     (8)
 static msg_t _main_msg_queue[MAIN_QUEUE_SIZE];
+
+/* add handled storages */
+#if IS_USED(MODULE_SUIT_STORAGE_VFS)
+XFA_USE(char*, suit_storage_files_reg);
+#ifdef BOARD_NATIVE
+XFA(suit_storage_files_reg, 0) char* _slot0 = VFS_DEFAULT_DATA "/SLOT0.txt";
+XFA(suit_storage_files_reg, 1) char* _slot1 = VFS_DEFAULT_DATA "/SLOT1.txt";
+#endif
+#endif
 
 static void *_nanocoap_server_thread(void *arg)
 {
@@ -69,7 +84,7 @@ static void cb(void *arg)
 {
     (void) arg;
     printf("Button pressed! Triggering suit update! \n");
-    suit_coap_trigger((uint8_t *) SUIT_MANIFEST_RESOURCE, sizeof(SUIT_MANIFEST_RESOURCE));
+    suit_worker_trigger(SUIT_MANIFEST_RESOURCE, sizeof(SUIT_MANIFEST_RESOURCE));
 }
 #endif
 
@@ -162,6 +177,12 @@ static int cmd_lsstorage(int argc, char **argv)
     if (IS_ACTIVE(MODULE_SUIT_STORAGE_FLASHWRITE)) {
         puts("Flashwrite slot 0: \"\"\n");
     }
+#if IS_USED(MODULE_SUIT_STORAGE_VFS)
+    for (unsigned i = 0; i < XFA_LEN(char **, suit_storage_files_reg); i++) {
+        const char *filepath = (const char *)suit_storage_files_reg[i];
+        printf("VFS %u: \"%s\"\n", i, filepath);
+    }
+#endif
 
     return 0;
 }
@@ -189,9 +210,8 @@ int main(void)
     cmd_print_current_slot(0, NULL);
     cmd_print_riotboot_hdr(0, NULL);
 #endif
-
-    /* start suit coap updater thread */
-    suit_coap_run();
+    /* initialize suit storage */
+    suit_storage_init_all();
 
     /* start nanocoap server thread */
     thread_create(_nanocoap_server_stack, sizeof(_nanocoap_server_stack),

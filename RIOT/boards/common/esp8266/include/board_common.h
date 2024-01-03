@@ -87,13 +87,18 @@ extern "C" {
  * a system MTD device has to be defined.
  * @{
  */
-#include "mtd.h"
 
 /** Default MTD device definition */
-#define MTD_0 mtd0
+#define MTD_0 mtd_dev_get(0)
 
-/** Pointer to the default MTD device structure */
-extern mtd_dev_t *mtd0;
+/**
+ * @brief   MTD offset for SD Card interfaces
+ *
+ * MTD_1 is used for SD Card.
+ */
+#ifndef CONFIG_SDCARD_GENERIC_MTD_OFFSET
+#define CONFIG_SDCARD_GENERIC_MTD_OFFSET    1
+#endif
 
 /** @} */
 #endif /* defined(MODULE_MTD) || defined(DOXYGEN) */

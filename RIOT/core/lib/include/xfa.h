@@ -25,6 +25,9 @@
 #ifndef XFA_H
 #define XFA_H
 
+#include <inttypes.h>
+#include "compiler_hints.h"
+
 /*
  * Unfortunately, current gcc trips over accessing XFA's because of their
  * zero-size start/end array that are used of symbol markers, with an "array
@@ -40,16 +43,18 @@ _Pragma("GCC diagnostic ignored \"-Warray-bounds\"")
  *
  * @internal
  */
-#define _XFA(name, prio) __attribute__((used, section(".xfa." #name "." #prio)))
+#define _XFA(name, prio) \
+    NO_SANITIZE_ARRAY \
+    __attribute__((used, section(".xfa." #name "." #prio)))
 
 /**
  * @brief helper macro for other XFA_* macros
  *
  * @internal
  */
-#define _XFA_CONST(name, \
-                   prio) __attribute__((used, \
-                                        section(".roxfa." #name "." #prio)))
+#define _XFA_CONST(name, prio) \
+    NO_SANITIZE_ARRAY \
+    __attribute__((used, section(".roxfa." #name "." #prio)))
 
 /**
  * @brief Define a read-only cross-file array
@@ -62,14 +67,14 @@ _Pragma("GCC diagnostic ignored \"-Warray-bounds\"")
  *     error: ISO C forbids empty initializer braces
  *     error: ISO C forbids zero-size array ‘xfatest_const_end’
  *
- * @param[in]   type    name of the cross-file array
+ * @param[in]   type    type of the cross-file array
  * @param[in]   name    name of the cross-file array
  */
 #define XFA_INIT_CONST(type, name) \
     _Pragma("GCC diagnostic push") \
     _Pragma("GCC diagnostic ignored \"-Wpedantic\"") \
-    _XFA_CONST(name, 0_) const volatile type name [0] = {}; \
-    _XFA_CONST(name, 9_) const volatile type name ## _end [0] = {}; \
+    _XFA_CONST(name, 0_) type name [0] = {}; \
+    _XFA_CONST(name, 9_) type name ## _end [0] = {}; \
     _Pragma("GCC diagnostic pop") \
     extern const unsigned __xfa_dummy
 
@@ -84,7 +89,7 @@ _Pragma("GCC diagnostic ignored \"-Warray-bounds\"")
  *     error: ISO C forbids empty initializer braces
  *     error: ISO C forbids zero-size array ‘xfatest_end’
  *
- * @param[in]   type    name of the cross-file array
+ * @param[in]   type    type of the cross-file array
  * @param[in]   name    name of the cross-file array
  */
 #define XFA_INIT(type, name) \
@@ -103,12 +108,11 @@ _Pragma("GCC diagnostic ignored \"-Warray-bounds\"")
  * It is supposed to be used in compilation units where the cross file array is
  * being accessed, but not defined using XFA_INIT.
  *
- * @param[in]   type    name of the cross-file array
+ * @param[in]   type    type of the cross-file array
  * @param[in]   name    name of the cross-file array
  */
 #define XFA_USE_CONST(type, name) \
-    extern const type name []; \
-    extern const type name ## _end []
+    XFA_USE(type, name)
 
 /**
  * @brief Declare an external writable cross-file array
@@ -118,7 +122,7 @@ _Pragma("GCC diagnostic ignored \"-Warray-bounds\"")
  * It is supposed to be used in compilation units where the cross file array is
  * being accessed, but not defined using XFA_INIT.
  *
- * @param[in]   type    name of the cross-file array
+ * @param[in]   type    type of the cross-file array
  * @param[in]   name    name of the cross-file array
  */
 #define XFA_USE(type, name) \
@@ -171,13 +175,13 @@ _Pragma("GCC diagnostic ignored \"-Warray-bounds\"")
  */
 #define XFA_ADD_PTR(xfa_name, prio, name, entry) \
     _XFA_CONST(xfa_name, 5_ ## prio) \
-    const __typeof__(entry) xfa_name ## _ ## prio ## _ ## name = entry
+    __typeof__(entry) xfa_name ## _ ## prio ## _ ## name = entry
 
 /**
  * @brief Calculate number of entries in cross-file array
  */
 #define XFA_LEN(type, \
-                name) (((const char *)name ## _end - (const char *)name) / \
+                name) (((uintptr_t)name ## _end - (uintptr_t)name) / \
                        sizeof(type))
 
 #ifdef __cplusplus

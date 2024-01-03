@@ -39,10 +39,6 @@
 #include "periph/uart.h"
 #endif /* IS_USED(MODULE_STDIO_NIMBLE_DEBUG) */
 
-#if IS_USED(MODULE_VFS)
-#include "vfs.h"
-#endif
-
 #include "tsrb.h"
 #include "isrpipe.h"
 #include "stdio_nimble.h"
@@ -89,23 +85,17 @@ static struct ble_gap_event_listener _gap_event_listener;
 static char _debug_printf_buf[DEBUG_PRINTF_BUFSIZE];
 #endif /* IS_USED(MODULE_STDIO_NIMBLE_DEBUG) */
 
-static int _debug_printf(const char *format, ...)
-{
 #if IS_USED(MODULE_STDIO_NIMBLE_DEBUG)
-    unsigned state = irq_disable();
-    va_list va;
-    va_start(va, format);
-    int rc = vsnprintf(_debug_printf_buf, DEBUG_PRINTF_BUFSIZE, format, va);
-    va_end(va);
-    uart_write(STDIO_UART_DEV, (const uint8_t *)_debug_printf_buf, rc);
-    irq_restore(state);
-
-    return rc;
+#define _debug_printf(...) \
+    do { \
+        unsigned state = irq_disable(); \
+        int rc = snprintf(_debug_printf_buf, DEBUG_PRINTF_BUFSIZE, __VA_ARGS__); \
+        uart_write(STDIO_UART_DEV, (const uint8_t *)_debug_printf_buf, rc); \
+        irq_restore(state); \
+    } while(0)
 #else
-    (void)format;
-    return 0;
+#define _debug_printf(...) (void)0
 #endif
-}
 
 /**
  * @brief UUID for stdio service (value: e6d54866-0292-4779-b8f8-c52bbec91e71)
@@ -237,39 +227,44 @@ static int _gap_event_cb(struct ble_gap_event *event, void *arg)
     switch (event->type) {
 
     case BLE_GAP_EVENT_CONNECT:
-        _debug_printf("BLE_GAP_EVENT_CONNECT\n");
-        if (event->connect.status == 0) {
+        _debug_printf("BLE_GAP_EVENT_CONNECT handle: %d\n", event->connect.conn_handle);
+        if (event->connect.status == 0 && _conn_handle == 0) {
             _status = STDIO_NIMBLE_CONNECTED;
             if (CONFIG_STDIO_NIMBLE_CLEAR_BUFFER_ON_CONNECT) {
                 _purge_buffer();
             }
-            _conn_handle = event->connect.conn_handle;
         }
-        else {
+        else if (event->connect.conn_handle == _conn_handle) {
+            _conn_handle = 0;
             _status = STDIO_NIMBLE_DISCONNECTED;
         }
         break;
 
     case BLE_GAP_EVENT_DISCONNECT:
-        _debug_printf("BLE_GAP_EVENT_DISCONNECT\n");
-        _status = STDIO_NIMBLE_DISCONNECTED;
+        _debug_printf("BLE_GAP_EVENT_DISCONNECT %d\n", event->disconnect.conn.conn_handle);
+        if (event->disconnect.conn.conn_handle == _conn_handle) {
+            _status = STDIO_NIMBLE_DISCONNECTED;
+            _conn_handle = 0;
+        }
         break;
 
     case BLE_GAP_EVENT_SUBSCRIBE:
-        _debug_printf("BLE_GAP_EVENT_SUBSCRIBE\n");
+        _debug_printf("BLE_GAP_EVENT_SUBSCRIBE %d\n", event->subscribe.conn_handle);
         if (event->subscribe.attr_handle == _val_handle_stdout) {
             if (event->subscribe.cur_indicate == 1) {
                 _status = STDIO_NIMBLE_SUBSCRIBED;
+                _conn_handle = event->subscribe.conn_handle;
             }
             else {
                 _status = STDIO_NIMBLE_CONNECTED;
+                _conn_handle = 0;
             }
         }
         break;
 
     case BLE_GAP_EVENT_NOTIFY_TX:
-        _debug_printf("BLE_GAP_EVENT_NOTIFY_TX\n");
-        if (event->notify_tx.indication == 1) {
+        _debug_printf("BLE_GAP_EVENT_NOTIFY_TX %d\n", event->notify_tx.conn_handle);
+        if (event->notify_tx.indication == 1 && (event->notify_tx.conn_handle == _conn_handle)) {
             if (event->notify_tx.status == BLE_HS_EDONE) {
                 _status = STDIO_NIMBLE_SUBSCRIBED;
             }
@@ -307,10 +302,6 @@ static int gatt_svr_chr_access_stdin(
 
 void stdio_init(void)
 {
-#if IS_USED(MODULE_VFS)
-    vfs_bind_stdio();
-#endif
-
 #if IS_USED(MODULE_STDIO_NIMBLE_DEBUG)
     uart_init(STDIO_UART_DEV, STDIO_UART_BAUDRATE, NULL, NULL);
 #endif
@@ -356,9 +347,11 @@ ssize_t stdio_write(const void *buffer, size_t len)
 
     unsigned int consumed = tsrb_add(&_tsrb_stdout, buffer, len);
 
-    if (!ble_npl_callout_is_active(&_send_stdout_callout)) {
-        /* bootstrap callout */
-        ble_npl_callout_reset(&_send_stdout_callout, CALLOUT_TICKS_MS);
+    if (_status == STDIO_NIMBLE_SUBSCRIBED || _status == STDIO_NIMBLE_SENDING) {
+        if (!ble_npl_callout_is_active(&_send_stdout_callout)) {
+            /* bootstrap callout */
+            ble_npl_callout_reset(&_send_stdout_callout, CALLOUT_TICKS_MS);
+        }
     }
 
     return consumed;

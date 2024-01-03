@@ -35,25 +35,15 @@ NEW_STATE := $(USEMODULE) $(USEPKG) $(FEATURES_USED)
 ifneq ($(OLD_STATE),$(NEW_STATE))
   include $(RIOTMAKE)/dependency_resolution.inc.mk
 else
-  # Include late allowing them to have been disabled during dependency resolution
-  DEFAULT_MODULE += auto_init periph_init
-  DEFAULT_MODULE += periph_init_leds
-  DEFAULT_MODULE += periph_init_led0
-  DEFAULT_MODULE += periph_init_led1
-  DEFAULT_MODULE += periph_init_led2
-  DEFAULT_MODULE += periph_init_led3
-  DEFAULT_MODULE += periph_init_led4
-  DEFAULT_MODULE += periph_init_led5
-  DEFAULT_MODULE += periph_init_led6
-  DEFAULT_MODULE += periph_init_led7
+  include $(RIOTMAKE)/defaultmodules_no_recursive_deps.inc.mk
 
+  # Add auto_init and periph_init so that if not used all periph_init% and
+  # auto_init_% modules can be silently disabled
   USEMODULE += $(filter-out $(DISABLE_MODULE),auto_init periph_init)
-
   # If module auto_init is not used, silently disable all of its submodules
   ifeq (,$(filter auto_init,$(USEMODULE)))
     DISABLE_MODULE += auto_init_%
   endif
-
   # If module periph_init is not used, silently disable all of its submodules
   ifeq (,$(filter periph_init,$(USEMODULE)))
     DISABLE_MODULE += periph_init_%
@@ -64,7 +54,7 @@ else
   USEMODULE += $(filter-out $(DISABLE_MODULE),$(DEFAULT_MODULE))
 
   # Include eventual dependencies for default modules
-  include $(RIOTMAKE)/default_modules.deps.mk
+  include $(RIOTMAKE)/defaultmodules_deps.inc.mk
 
   # Sort and de-duplicate used modules and default modules for readability
   USEMODULE := $(sort $(USEMODULE))
@@ -89,5 +79,26 @@ else
       $(shell $(COLOR_ECHO) "$(COLOR_YELLOW)Telnet will be started automatically,"\
                             "don't run this on public networks!$(COLOR_RESET)" 1>&2)
     endif
+  endif
+
+  # Warn about STDIO UDP
+  ifneq (,$(filter stdio_udp,$(USEMODULE)))
+    ifneq (1,$(I_UNDERSTAND_THAT_STDIO_UDP_IS_INSECURE))
+      $(shell $(COLOR_ECHO) "$(COLOR_RED)stdio via UDP will be started automatically,"\
+                            "make sure you understand why this almost certainly"\
+                            "is a REALLY BAD idea before proceeding!$(COLOR_RESET)" 1>&2)
+      $(error I_UNDERSTAND_THAT_STDIO_UDP_IS_INSECURE must be set to 1 to proceed)
+    else
+      $(shell $(COLOR_ECHO) "$(COLOR_YELLOW)stdio via UDP will be started automatically,"\
+                            "don't run this on public networks!$(COLOR_RESET)" 1>&2)
+    endif
+  endif
+
+  # Warn about PSA Crypto
+  ifneq (,$(filter psa_crypto,$(USEMODULE)))
+    $(shell $(COLOR_ECHO) "$(COLOR_YELLOW) You are going to use the PSA Crypto module,"\
+                          "which is only partly implemented and not yet thouroughly tested.\n"\
+                          "Please do not use this module in production, as it may introduce"\
+                          "security issues!$(COLOR_RESET)" 1>&2)
   endif
 endif

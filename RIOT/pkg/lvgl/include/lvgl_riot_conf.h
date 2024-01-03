@@ -11,7 +11,7 @@
  * @{
  *
  * @file
- * @brief       Definitions specific to RIOT for the LittlevGL engine
+ * @brief       Definitions specific to RIOT for the LVGL engine
  *
  * @author      Alexandre Abadie <alexandre.abadie@inria.fr>
  */
@@ -63,3 +63,4 @@ typedef int16_t lv_coord_t;
 #endif
 
 #endif /* LVGL_RIOT_CONF_H */
+/** @} */

@@ -9,6 +9,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdbool.h>
 
 #include "femtocontainer/femtocontainer.h"
@@ -164,6 +165,8 @@ int f12r_run(f12r_t *femtoc, const void *ctx, int64_t *result)
     const bpf_instruction_t *instr = (const bpf_instruction_t*)f12r_text(femtoc);
     bool jump_cond = false;
 
+    printf("First instruction: %d\n", instr);
+    printf("Verifying femtocontainer vm\n");
     res = f12r_verify_preflight(femtoc);
     if (res < 0) {
         return res;
@@ -228,6 +231,8 @@ jump_instr:
 select_instr:
     instr++;
 femtoc_start:
+
+    printf("Starting VM execution\n");
     //femtoc->instruction_count++;
     goto *_jumptable[instr->opcode];
 
@@ -422,6 +427,8 @@ OPCODE_RETURN:
 
 invalid_instruction:
     res = FC_ILLEGAL_INSTRUCTION;
+    printf("Illegal instruction.\n");
+    printf("Instruction pointer: %d\n", instr);
     goto exit;
 
 mem_error:

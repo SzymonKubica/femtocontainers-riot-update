@@ -7,9 +7,9 @@
  */
 
 /**
- * @defgroup    net_gcoap_forward_proxy    Gcoap Forward Proxy
+ * @defgroup    net_gcoap_forward_proxy    GCoAP Forward Proxy
  * @ingroup     net_gcoap
- * @brief       Forward proxy implementation for Gcoap
+ * @brief       Forward proxy implementation for GCoAP
  * @note Does not support CoAPS yet.
  * @see <a href="https://tools.ietf.org/html/rfc7252#section-5.7.2">
  *          RFC 7252
@@ -18,7 +18,7 @@
  * @{
  *
  * @file
- * @brief       Definitions for the Gcoap forward proxy
+ * @brief       Definitions for the GCoAP forward proxy
  *
  * @author      Cenk Gündoğan <cenk.guendogan@haw-hamburg.de>
  */
@@ -29,12 +29,25 @@
 #include <stdbool.h>
 #include <errno.h>
 
+#include "net/coap.h"
 #include "net/nanocoap.h"
 #include "net/gcoap.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * @addtogroup net_gcoap_conf
+ * @{
+ */
+/**
+ * @brief Timeout in milliseconds for the forward proxy to send an empty ACK without response
+ */
+#ifndef CONFIG_GCOAP_FORWARD_PROXY_EMPTY_ACK_MS
+#define CONFIG_GCOAP_FORWARD_PROXY_EMPTY_ACK_MS     ((CONFIG_COAP_ACK_TIMEOUT_MS / 4) * 3)
+#endif
+/** @} */
 
 /**
  * @brief Registers a listener for forward proxy operation
@@ -53,7 +66,7 @@ void gcoap_forward_proxy_init(void);
  * @return    -EINVAL        if Proxy-Uri is malformed
  */
 int gcoap_forward_proxy_request_process(coap_pkt_t *pkt,
-                                        sock_udp_ep_t *client);
+                                        const sock_udp_ep_t *client);
 
 /**
  * @brief  Finds the memo for an outstanding request within the
@@ -67,21 +80,6 @@ int gcoap_forward_proxy_request_process(coap_pkt_t *pkt,
 void gcoap_forward_proxy_find_req_memo(gcoap_request_memo_t **memo_ptr,
                                        coap_pkt_t *src_pdu,
                                        const sock_udp_ep_t *remote);
-
-/**
- * @brief   Sends a buffer containing a CoAP message to the @p remote endpoint
- *
- * @param[in] buf    Buffer that contains the CoAP message to be sent
- * @param[in] len    Length of @p buf
- * @param[in] remote Remote endpoint to send the message to
- *
- * @note see sock_udp_send() for all return valus.
- *
- * @return  length of the packet
- * @return  < 0 on error
- */
-ssize_t gcoap_forward_proxy_dispatch(const uint8_t *buf,
-                                     size_t len, sock_udp_ep_t *remote);
 
 #ifdef __cplusplus
 }

@@ -71,9 +71,15 @@ extern "C" {
  * @name    BTN0 (SW0 Button) pin definitions
  * @{
  */
-#define BTN0_PORT                   PORT->Group[0]                      /**< GPIO port      */
 #define BTN0_PIN                    GPIO_PIN(PA, 28)                    /**< GPIO pin       */
 #define BTN0_MODE                   GPIO_IN_PU                          /**< Pull Up GPIO   */
+/** @} */
+
+/**
+ * @name MTD configuration
+ * @{
+ */
+#define MTD_0 mtd_dev_get(0)                  /**< First memory type device */
 /** @} */
 
 #ifdef __cplusplus

@@ -99,7 +99,6 @@ complete that no input from the original developer or maintainer is required.
 3.  Are critical/hard to understand parts in the code documented?
 4.  Check grammar and spelling of documentation
 
-
 ## Non-technical guidelines
 
 ### Interaction with contributors

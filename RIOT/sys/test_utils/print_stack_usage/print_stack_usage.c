@@ -22,10 +22,11 @@
 
 #if MODULE_FMT
 #include "fmt.h"
+#else
+#include <stdio.h>
 #endif
 
 #if MODULE_FMT
-/* fmt's `print_str()` needs very little stack. ~200 total was fine on Cortex-M. */
 # define MIN_SIZE   (THREAD_STACKSIZE_TINY)
 #else
 # define MIN_SIZE   (THREAD_STACKSIZE_TINY + THREAD_EXTRA_STACKSIZE_PRINTF)
@@ -40,7 +41,7 @@ void print_stack_usage_metric(const char *name, void *stack, unsigned max_size)
 #if MODULE_FMT
         print_str("{ \"threads\": [{ \"name\": \"");
         print_str(name);
-        print_str(", \"stack_size\": ");
+        print_str("\", \"stack_size\": ");
         print_u32_dec(max_size);
         print_str(", \"stack_used\": ");
         print_u32_dec(max_size - free);
@@ -57,12 +58,13 @@ void print_stack_usage_metric(const char *name, void *stack, unsigned max_size)
 void test_utils_print_stack_usage(void)
 {
     for (kernel_pid_t i = KERNEL_PID_FIRST; i <= KERNEL_PID_LAST; i++) {
-        thread_t *p = (thread_t *)sched_threads[i];
+        thread_t *p = thread_get(i);
 
         if (p == NULL) {
             continue;
         }
-        print_stack_usage_metric(p->name, p->stack_start, p->stack_size);
+        print_stack_usage_metric(thread_get_name(p), thread_get_stackstart(
+                                     p), thread_get_stacksize(p));
     }
 }
 #endif

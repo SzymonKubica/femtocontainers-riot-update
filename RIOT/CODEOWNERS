@@ -53,7 +53,6 @@
 /cpu/fe310/                                 @aabadie @kaspar030 @bergzand
 /cpu/kinetis/                               @fjmolinas
 /cpu/lpc2387/                               @benpicco @maribu
-/cpu/mips*/                                 @kaspar030 @francois-berder
 /cpu/msp430*/                               @kaspar030 @gschorcht
 /cpu/nrf*/                                  @aabadie @haukepetersen
 /cpu/nrf52/radio/nrf802154/                 @bergzand @SemjonKerner @jia200x
@@ -100,6 +99,7 @@
 /drivers/include/periph/ptp.h               @maribu
 
 /pkg/cryptoauthlib/                         @Einhornhool @PeterKietzmann
+/pkg/libschc/                               @bartmoons @miri64
 /pkg/lua/                                   @jcarrano
 /pkg/lwip/                                  @miri64
 /pkg/gecko_sdk/                             @basilfx
@@ -108,6 +108,7 @@
 /pkg/openthread/                            @Hyungsin @jia200x
 /pkg/semtech-loramac/                       @aabadie @jia200x
 /pkg/tinydtls/                              @rfuentess @leandrolanzieri
+/pkg/tinyvcdiff/                            @jue89
 /pkg/u8g2/                                  @basilfx
 /pkg/ucglib/                                @basilfx
 /pkg/wakaama/                               @leandrolanzieri
@@ -140,16 +141,17 @@
 /sys/ztimer/                                @kaspar030 @bergzand
 
 /tests/                                     @smlng @leandrolanzieri @aabadie @MichelRottleuthner @fjmolinas
-/tests/candev/                              @wosym
-/tests/driver_bq2429x/                      @jeandudey
-/tests/driver_dht/                          @wosym
-/tests/gnrc*                                @miri64
-/tests/lwip*                                @miri64
-/tests/slip/                                @miri64
+/tests/drivers/candev/                      @wosym
+/tests/drivers/bq2429x/                     @jeandudey
+/tests/drivers/dht/                         @wosym
+/tests/net/gnrc*                            @miri64
+/tests/pkg/lwip*                            @miri64
+/tests/pkg/libschc/                         @miri64
+/tests/net/slip/                            @miri64
 /tests/unittests                            @miri64
 /tests/*/tests/*.py                         @miri64
-/tests/cpu_efm32_features/                  @basilfx
+/tests/cpu/efm32_features/                  @basilfx
 
 # KConfig maintainers will be notified about all KConfig changes
-Kconfig                                     @leandrolanzieri @jia200x @cgundogan
+Kconfig                                     @leandrolanzieri @jia200x @MrKevinWeiss
 pm.c                                        @kaspar030

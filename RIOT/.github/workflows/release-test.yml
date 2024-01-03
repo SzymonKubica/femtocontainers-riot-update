@@ -44,7 +44,7 @@ env:
 # to hit Github Limit of 6h per job.
 jobs:
   tasks:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 360
     strategy:
       fail-fast: false
@@ -78,20 +78,28 @@ jobs:
         ssh -oStrictHostKeyChecking=accept-new \
           ${IOTLAB_USER}@saclay.iot-lab.info exit
     - name: Fetch host key from IoT-LAB lille site
+      # Not being used in the most recent release specs but kept in for
+      # backwords compatibility
       if: ${{ matrix.pytest_mark == 'iotlab_creds' }}
       run: |
         IOTLAB_USER=$(cat ~/.iotlabrc | cut -f1 -d:)
         ssh -oStrictHostKeyChecking=accept-new \
           ${IOTLAB_USER}@lille.iot-lab.info exit
+    - name: Fetch host key from IoT-LAB strasbourg site
+      if: ${{ matrix.pytest_mark == 'iotlab_creds' }}
+      run: |
+        IOTLAB_USER=$(cat ~/.iotlabrc | cut -f1 -d:)
+        ssh -oStrictHostKeyChecking=accept-new \
+          ${IOTLAB_USER}@strasbourg.iot-lab.info exit
     - name: Checkout Release-Specs
-      uses: actions/checkout@v2
+      uses: actions/checkout@main
       with:
         repository: RIOT-OS/Release-Specs
         path: Release-Specs
         fetch-depth: 1
         ref: ${{ github.event.inputs.release_specs_version }}
     - name: Checkout RIOT
-      uses: actions/checkout@v2
+      uses: actions/checkout@main
       with:
         repository: RIOT-OS/RIOT
         path: RIOT
@@ -116,6 +124,11 @@ jobs:
       if: ${{ matrix.pytest_mark == 'not iotlab_creds' }}
       run: |
         sudo RIOT/dist/tools/tapsetup/tapsetup -c 11
+    - name: Install native dependencies
+      if: ${{ matrix.pytest_mark == 'not iotlab_creds' }}
+      run: |
+        sudo apt-get update
+        sudo apt-get install lib32asan6
     - name: Run release tests
       timeout-minutes: 350
       run: |

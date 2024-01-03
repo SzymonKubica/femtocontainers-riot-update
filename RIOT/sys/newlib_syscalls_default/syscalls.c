@@ -60,7 +60,7 @@
 #define NUM_HEAPS 1
 #endif
 
-#ifdef MODULE_MSP430_COMMON
+#ifdef __MSP430__
 /* the msp430 linker scripts define the end of all memory as __stack, which in
  * turn is used as the initial stack. RIOT also uses __stack as SP on isr
  * entry.  This logic makes __stack - ISR_STACKSIZE the heap end.
@@ -70,7 +70,7 @@ extern char __heap_start__;
 #define _sheap __heap_start__
 #define __eheap (char *)((uintptr_t)&__stack - ISR_STACKSIZE)
 
-#else /* MODULE_MSP430_COMMON */
+#else /* __MSP430__ */
 
 /**
  * @brief manage the heap
@@ -144,8 +144,6 @@ static const struct heap heaps[NUM_HEAPS] = {
 #endif
 };
 
-/* MIPS newlib crt implements _init,_fini and _exit and manages the heap */
-#ifndef __mips__
 /**
  * @brief Initialize NewLib, called by __libc_init_array() from the startup script
  */
@@ -175,14 +173,11 @@ __attribute__((used)) void _exit(int n)
 {
     LOG_INFO("#! exit %i: powering off\n", n);
     pm_off();
-    while(1);
+    while (1) {}
 }
 
 /**
  * @brief Allocate memory from the heap.
- *
- * The current heap implementation is very rudimentary, it is only able to allocate
- * memory. But it does not have any means to free memory again
  *
  * @return      pointer to the newly allocated memory on success
  * @return      pointer set to address `-1` on failure
@@ -233,8 +228,6 @@ __attribute__((weak)) void heap_stats(void)
            heap_size, minfo.uordblks, heap_size - minfo.uordblks);
 }
 #endif /* HAVE_HEAP_STATS */
-
-#endif /*__mips__*/
 
 /**
  * @brief Get the process-ID of the current thread
@@ -606,7 +599,7 @@ int _isatty_r(struct _reent *r, int fd)
 {
     r->_errno = 0;
 
-    if(fd == STDIN_FILENO || fd == STDOUT_FILENO || fd == STDERR_FILENO) {
+    if (fd == STDIN_FILENO || fd == STDOUT_FILENO || fd == STDERR_FILENO) {
         return 1;
     }
 

@@ -15,8 +15,7 @@ USEMODULE += gnrc_icmpv6_echo
 USEMODULE += nanocoap_sock
 
 # include this for printing IP addresses
-USEMODULE += shell
-USEMODULE += shell_commands
+USEMODULE += shell_cmds_default
 
 # include riotboot modules
 USEMODULE += riotboot_flashwrite

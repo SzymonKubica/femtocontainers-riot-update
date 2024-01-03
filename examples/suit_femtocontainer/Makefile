@@ -2,7 +2,7 @@
 APPLICATION = suit_femtocontainer
 
 # If no BOARD is found in the environment, use this default:
-BOARD ?= native
+BOARD ?= esp32-wroom-32
 
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../../RIOT
@@ -26,13 +26,16 @@ USEMODULE += gnrc_icmpv6_echo
 
 # include this for printing IP addresses
 USEMODULE += shell
-USEMODULE += shell_commands
+USEMODULE += shell_cmds_default
+USEMODULE += shell_cmd_suit
 USEMODULE += bpf
+USEMODULE += gcoap
 USEPKG += femto-container
 
 USEMODULE += saul
 USEMODULE += saul_reg
 USEMODULE += saul_default
+
 
 
 # Set this to 1 to enable code in RIOT that does safety checking

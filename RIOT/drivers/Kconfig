@@ -6,9 +6,6 @@
 
 menu "Drivers"
 
-config MODULE_NETDEV_DEFAULT
-    bool "Enable default network devices on the platform"
-
 rsource "saul/Kconfig"
 
 menu "Actuator Device Drivers"
@@ -33,8 +30,9 @@ rsource "dsp0401/Kconfig"
 rsource "hd44780/Kconfig"
 rsource "ili9341/Kconfig"
 rsource "lcd/Kconfig"
-rsource "st7735/Kconfig"
+rsource "st77xx/Kconfig"
 rsource "touch_dev/Kconfig"
+rsource "touch_dev_gestures/Kconfig"
 endmenu # Display Device Drivers
 
 menu "Miscellaneous Device Drivers"
@@ -60,6 +58,7 @@ rsource "periph_common/Kconfig"
 rsource "rtt_rtc/Kconfig"
 rsource "soft_spi/Kconfig"
 rsource "soft_uart/Kconfig"
+rsource "usbdev_synopsys_dwc2/Kconfig"
 endmenu # Peripherals drivers
 
 menu "Sensor Device Drivers"
@@ -108,8 +107,11 @@ rsource "lpd8808/Kconfig"
 rsource "lpsxxx/Kconfig"
 rsource "lsm6dsl/Kconfig"
 rsource "lsm303dlhc/Kconfig"
+rsource "lsm303agr/Kconfig"
 rsource "ltc4150/Kconfig"
 rsource "mag3110/Kconfig"
+rsource "matrix_keypad/Kconfig"
+rsource "mfrc522/Kconfig"
 rsource "mhz19/Kconfig"
 rsource "mma8x5x/Kconfig"
 rsource "mma7660/Kconfig"
@@ -148,6 +150,7 @@ rsource "tsl2561/Kconfig"
 rsource "tsl4531x/Kconfig"
 rsource "vcnl40x0/Kconfig"
 rsource "veml6070/Kconfig"
+rsource "vl6180x/Kconfig"
 endmenu # Sensor Device Drivers
 
 menu "Storage Device Drivers"
@@ -159,6 +162,7 @@ rsource "mtd_sdcard/Kconfig"
 rsource "nvram/Kconfig"
 rsource "nvram_spi/Kconfig"
 rsource "sdcard_spi/Kconfig"
+rsource "sdmmc/Kconfig"
 endmenu # Storage Device Drivers
 
 endmenu # Drivers

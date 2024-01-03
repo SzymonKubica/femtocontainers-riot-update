@@ -28,8 +28,8 @@
 #define ENABLE_DEBUG (0)
 #include "debug.h"
 
-static ssize_t _sha256_handler(coap_pkt_t* pdu, uint8_t *buf, size_t len, void *ctx);
-static ssize_t _riot_block2_handler(coap_pkt_t *pdu, uint8_t *buf, size_t len, void *ctx);
+static ssize_t _sha256_handler(coap_pkt_t* pdu, uint8_t *buf, size_t len, coap_request_ctx_t *ctx);
+static ssize_t _riot_block2_handler(coap_pkt_t *pdu, uint8_t *buf, size_t len, coap_request_ctx_t *ctx);
 
 /* CoAP resources */
 static const coap_resource_t _resources[] = {
@@ -47,7 +47,7 @@ static const uint8_t block2_intro[] = "This is RIOT (Version: ";
 static const uint8_t block2_board[] = " running on a ";
 static const uint8_t block2_mcu[] = " board with a ";
 
-static ssize_t _riot_block2_handler(coap_pkt_t *pdu, uint8_t *buf, size_t len, void *ctx)
+static ssize_t _riot_block2_handler(coap_pkt_t *pdu, uint8_t *buf, size_t len, coap_request_ctx_t *ctx)
 {
     (void)ctx;
     coap_block_slicer_t slicer;
@@ -80,7 +80,7 @@ static ssize_t _riot_block2_handler(coap_pkt_t *pdu, uint8_t *buf, size_t len, v
 
 /*
  * Uses block1 POSTs to generate an sha256 digest. */
-static ssize_t _sha256_handler(coap_pkt_t* pdu, uint8_t *buf, size_t len, void *ctx)
+static ssize_t _sha256_handler(coap_pkt_t* pdu, uint8_t *buf, size_t len, coap_request_ctx_t *ctx)
 {
     (void)ctx;
 
@@ -93,8 +93,8 @@ static ssize_t _sha256_handler(coap_pkt_t* pdu, uint8_t *buf, size_t len, void *
 
     int blockwise = coap_get_block1(pdu, &block1);
 
-    printf("_sha256_handler: received data: offset=%u len=%u blockwise=%i more=%i\n",
-            (unsigned)block1.offset, pdu->payload_len, blockwise, block1.more);
+    printf("_sha256_handler: received data: offset=%" PRIuSIZE " len=%u blockwise=%i more=%i\n",
+            block1.offset, pdu->payload_len, blockwise, block1.more);
 
     /* initialize sha256 calculation and add payload bytes */
     if (block1.blknum == 0) {

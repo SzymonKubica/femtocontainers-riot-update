@@ -38,10 +38,17 @@ static ssize_t _riot_board_handler(coap_pkt_t *pkt, uint8_t *buf, size_t len, vo
 }
 
 static f12r_t _bpf = {
-    .application = NULL,
-    .application_len = 0,
+    .stack_region = NULL,
+    .rodata_region = NULL,
+    .data_region = NULL,
+    .arg_region = NULL,
+    .application = NULL, /**< Application bytecode */
+    .application_len = 0,     /**< Application length */
     .stack = _stack,
     .stack_size = sizeof(_stack),
+    .flags = 0,
+        // TODO: set branches rem to something sensible
+    .branches_remaining = 100, /**< Number of allowed branch instructions remaining */
 };
 
 static ssize_t _bpf_handler(coap_pkt_t *pdu, uint8_t *buf, size_t len, void *ctx)
@@ -49,14 +56,25 @@ static ssize_t _bpf_handler(coap_pkt_t *pdu, uint8_t *buf, size_t len, void *ctx
     char *location = ctx;
     char reply[12] = { 0 };
 
-    suit_storage_t *storage = suit_storage_find_by_id(location);
+    printf("[BPF]: finding suit storage by id\n");
+    // For now hard code the location to be .ram.0
+    suit_storage_t *storage = suit_storage_find_by_id(".ram.0");
 
     assert(storage);
 
-    suit_storage_set_active_location(storage, location);
+    printf("[BPF]: setting suit storage active location: %s\n", location);
+    suit_storage_set_active_location(storage, ".ram.0");
     const uint8_t *mem_region;
     size_t length;
+
+    printf("[BPF]: reading bpf application from suit storage\n");
     suit_storage_read_ptr(storage, &mem_region, &length);
+
+    printf("Application bytecode:\n");
+    for (size_t i = 0; i < length; i++) {
+        printf("%02x", mem_region[i]);
+    }
+    printf("\n");
 
     _bpf.application = mem_region;
     _bpf.application_len = length;

@@ -122,7 +122,6 @@
 #include "clist.h"
 #include "cib.h"
 #include "msg.h"
-#include "cpu_conf.h"
 #include "sched.h"
 #include "thread_config.h"
 
@@ -206,9 +205,6 @@ struct _thread {
 /* enable TLS only when Picolibc is compiled with TLS enabled */
 #ifdef PICOLIBC_TLS
     void *tls;                      /**< thread local storage ptr */
-#endif
-#ifdef HAVE_THREAD_ARCH_T
-    thread_arch_t arch;             /**< architecture dependent part    */
 #endif
 };
 
@@ -325,7 +321,14 @@ void thread_sleep(void);
  *
  * @see     thread_yield_higher()
  */
+#if defined(MODULE_CORE_THREAD) || DOXYGEN
 void thread_yield(void);
+#else
+static inline void thread_yield(void)
+{
+    /* NO-OP */
+}
+#endif
 
 /**
  * @brief   Lets current thread yield in favor of a higher prioritized thread.
@@ -436,7 +439,15 @@ void thread_add_to_list(list_node_t *list, thread_t *thread);
  * @return          the threads name
  * @return          `NULL` if pid is unknown
  */
+#if defined(MODULE_CORE_THREAD) || DOXYGEN
 const char *thread_getname(kernel_pid_t pid);
+#else
+static inline const char *thread_getname(kernel_pid_t pid)
+{
+    (void)pid;
+    return "(none)";
+}
+#endif
 
 /**
  * @brief Measures the stack usage of a stack

@@ -66,6 +66,8 @@ extern "C" {
 #define BIT7  0x00000080 /**< Bit 7 set define */
 #define BIT8  0x00000100 /**< Bit 8 set define */
 #define BIT9  0x00000200 /**< Bit 9 set define */
+#endif
+#ifndef BIT10
 #define BIT10 0x00000400 /**< Bit 10 set define */
 #define BIT11 0x00000800 /**< Bit 11 set define */
 #define BIT12 0x00001000 /**< Bit 12 set define */
@@ -163,6 +165,44 @@ static inline unsigned bitarithm_msb(unsigned v)
 #endif
 }
 
+/**
+ * @brief   Returns the number of leading 0-bits in @p x, starting at the most
+ *          significant bit position.
+ *          If x is 0, the result is undefined.
+ *
+ * @param[in]   x   Input value
+ * @return          Number of leading zero bits
+ */
+static inline uint8_t bitarithm_clzb(uint8_t x)
+{
+#if defined(BITARITHM_HAS_CLZ)
+    /* clz operates on `unsigned int`, so `x` will be promoted to the size
+       of an `unsigned int` */
+    return __builtin_clz(x) - 8 * (sizeof(unsigned) - 1);
+#else
+    uint8_t l = 0;
+    while (!(x & 0x80)) {
+        ++l;
+        x <<= 1;
+    }
+    return l;
+#endif
+}
+
+/**
+ * @private
+ *
+ * @brief Lookup table for a fast CLS / LSB implementations.
+ *
+ * This is not supposed to be public, and should be declared `extern const` in
+ * the two functions which use it -- but that causes [transpiler issues], so it
+ * is declared here as a workaround. (Once that issue is resolved and part of
+ * CI, this line will be removed again).
+ *
+ * [transpiler issues]: https://github.com/immunant/c2rust/issues/423
+ */
+extern const uint8_t bitarithm_MultiplyDeBruijnBitPosition[32];
+
 static inline unsigned bitarithm_lsb(unsigned v)
 #if defined(BITARITHM_LSB_BUILTIN)
 {
@@ -171,12 +211,11 @@ static inline unsigned bitarithm_lsb(unsigned v)
 #elif defined(BITARITHM_LSB_LOOKUP)
 {
 /* Source: http://graphics.stanford.edu/~seander/bithacks.html#ZerosOnRightMultLookup */
-    extern const uint8_t MultiplyDeBruijnBitPosition[32];
     /* cppcheck-suppress oppositeExpression
      * (reason: `x & -x` is a bit twiddling idiom to extract the LSB; the
      * check treats opposite arguments as indicator for poor copy-pasting
      * as e.g. `x + -x` or `x & ~x` don't make sense. ) */
-    return MultiplyDeBruijnBitPosition[((uint32_t)((v & -v) * 0x077CB531U)) >>
+    return bitarithm_MultiplyDeBruijnBitPosition[((uint32_t)((v & -v) * 0x077CB531U)) >>
                                        27];
 }
 #else
@@ -219,13 +258,12 @@ static inline unsigned bitarithm_test_and_clear(unsigned state, uint8_t *index)
     return state & ~(1 << *index);
 #elif defined(BITARITHM_LSB_LOOKUP)
     /* Source: http://graphics.stanford.edu/~seander/bithacks.html#ZerosOnRightMultLookup */
-    extern const uint8_t MultiplyDeBruijnBitPosition[32];
     /* cppcheck-suppress oppositeExpression
      * (reason: `x & -x` is a bit twiddling idiom to extract the LSB; the
      * check treats opposite arguments as indicator for poor copy-pasting
      * as e.g. `x + -x` or `x & ~x` don't make sense. ) */
     uint32_t least_bit = state & -state;
-    *index = MultiplyDeBruijnBitPosition[(least_bit * 0x077CB531U) >> 27];
+    *index = bitarithm_MultiplyDeBruijnBitPosition[(least_bit * 0x077CB531U) >> 27];
     return state & ~least_bit;
 #else
     while ((state & 1) == 0) {

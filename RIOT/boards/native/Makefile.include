@@ -14,7 +14,19 @@ RESET ?= $(RIOTBOARD)/native/dist/reset.sh
 FLASHER ?=
 FLASHFILE ?= $(ELFFILE)
 
-TERMPROG ?= $(FLASHFILE)
+ifeq (native,$(RIOT_TERMINAL))
+  TERMPROG ?= $(FLASHFILE)
+else
+  TERMFLAGS += -ps $(FLASHFILE)
+  ifeq (1,$(USE_ZEP))
+    ZEP_IP ?= [::1]
+    ZEP_PORT_BASE ?= 17754
+    TERMFLAGS += --process-args '-z $(ZEP_IP):$(ZEP_PORT_BASE)'
+  endif
+  ifneq (,$(ZEP_MAC))
+    TERMFLAGS += --process-args '\-\-eui64=$(ZEP_MAC)'
+  endif
+endif
 
 export VALGRIND ?= valgrind
 export CGANNOTATE ?= cg_annotate
@@ -88,8 +100,12 @@ endif
 LINKFLAGS += -ffunction-sections
 
 # set the tap interface for term/valgrind
-ifneq (,$(filter netdev_tap,$(USEMODULE)))
-  PORT ?= tap0
+PORT ?= tap0
+
+ifeq (native,$(RIOT_TERMINAL))
+  TERMFLAGS += $(PORT)
+else
+  TERMFLAGS += --process-args $(PORT)
 endif
 
 # Configure default eeprom file
@@ -110,7 +126,6 @@ ifneq (,$(filter periph_can,$(FEATURES_USED)))
   TERMFLAGS += $(PERIPH_CAN_FLAGS)
 endif
 
-TERMFLAGS += $(PORT)
 
 ASFLAGS =
 ifeq ($(shell basename $(DEBUGGER)),lldb)
@@ -132,9 +147,11 @@ all-valgrind: CFLAGS += -DHAVE_VALGRIND_H
 all-valgrind: NATIVEINCLUDES += $(shell pkg-config valgrind --cflags)
 all-gprof: CFLAGS += -pg
 all-gprof: LINKFLAGS += -pg
-all-asan: CFLAGS += -fsanitize=address -fno-omit-frame-pointer
-all-asan: CFLAGS += -DNATIVE_MEMORY
-all-asan: LINKFLAGS += -fsanitize=address -fno-omit-frame-pointer
+
+CFLAGS_ASAN += -fsanitize=address -fno-omit-frame-pointer -DNATIVE_MEMORY
+LINKFLAGS_ASAN += -fsanitize=address -fno-omit-frame-pointer
+all-asan: CFLAGS += $(CFLAGS_ASAN)
+all-asan: LINKFLAGS += $(LINKFLAGS_ASAN)
 all-asan: export AFL_USE_ASAN=1
 
 INCLUDES += $(NATIVEINCLUDES)
@@ -144,15 +161,6 @@ CFLAGS += -DDEBUG_ASSERT_VERBOSE
 # workaround for https://gcc.gnu.org/bugzilla/show_bug.cgi?id=52624
 ifneq ($(shell gcc --version | head -1 | grep -E ' (4.6|4.7)'),)
   CFLAGS += -DHAVE_NO_BUILTIN_BSWAP16
-endif
-
-# backward compatability with glibc <= 2.17 for native
-ifeq ($(CPU),native)
-  ifeq ($(OS),Linux)
-    ifeq ($(shell ldd --version |  awk '/^ldd/{if ($$NF < 2.17) {print "yes"} else {print "no"} }'),yes)
-	  LINKFLAGS += -lrt
-    endif
-  endif
 endif
 
 # clumsy way to enable building native on osx:

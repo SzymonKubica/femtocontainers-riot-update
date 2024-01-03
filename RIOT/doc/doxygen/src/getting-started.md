@@ -15,7 +15,7 @@ In order to clone the RIOT repository, you need the
 command:
 
 ~~~~~~~~ {.sh}
-git clone git://github.com/RIOT-OS/RIOT.git
+git clone https://github.com/RIOT-OS/RIOT.git
 ~~~~~~~~
 
 Compiling RIOT                                                {#compiling-riot}
@@ -29,14 +29,14 @@ A set of common tools and a toolchain for the hardware you target needs to be in
 ### Choosing an Operating System for the Development PC
 
 Most of the RIOT OS developers are using Linux on their development PCs, so you can expect the
-most streamlined experience here. Other POSIX-compliant OSes such as current versions of Mac OS or
-the various BSD flavours will also be fine - however, we rely on users to report bugs regarding
-tooling incompatibilities here. So expect occasional issues for the development branch and please
-help testing during the feature freeze period, if you develop on Mac OS or BSD.
+most streamlined experience here. Other POSIX-compliant OSes such as the various BSD flavours
+will also be fine - however, we rely on users to report bugs regarding tooling incompatibilities
+here. So expect occasional issues for the development branch and please help testing during the
+feature freeze period, if you develop on macOS or BSD.
 
-Native development on Windows machines is not officially supported. What works well is using Linux
-in a virtual machine, but at much lower performance than running Linux natively. For development
-using the
+Native development on Windows and macOS machines is not officially supported. What works well is using Linux
+in a virtual machine, but at much lower performance than running Linux natively. We also offer Docker images.
+For development on Windows, using the
 [Windows Subsystem for Linux (WSL)](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux)
 is a good option
 ([installation instructions here](https://docs.microsoft.com/en-us/windows/wsl/install)), but it
@@ -70,7 +70,7 @@ developing for:
 
 For example, in Ubuntu the above tools can be installed with the following command:
 
-    sudo apt install git gcc-arm-none-eabi make gcc-multilib openocd gdb-multiarch doxygen wget unzip python3-serial
+    sudo apt install git gcc-arm-none-eabi make gcc-multilib libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen wget unzip python3-serial
 
 @details Running `BOARD=<INSERT_TARGET_BOARD_HERE> make info-programmers-supported` in your
          application folder lists the programmers supported by RIOT for the given board.
@@ -132,20 +132,13 @@ For example, in Ubuntu the above tools can be installed with the following comma
       board support
 * Optional: GDB multiarch for debugging
 
-### Architecture: MIPS
-
-* GCC, binutils, and newlib for MIPS
-    * Alternatively: Install docker and export `BUILD_IN_DOCKER=1`
-* Check board documentation for flashing and debugging
-
 ### Architecture: native
 
 * On 64 bit systems: multilib versions for your host compilers, standard C library, and development
   headers
     * Alternatively: Compile with `BUILD_IN_DOCKER=1`. Note that for running the executable you
       still need a multilib system (or 32 bit Linux) with glibc a standard C library.
-* A C library supporting the deprecated POSIX.1-2001 ucontext library (e.g. glibc, FreeBSD's libc,
-  Mac OS's libc)
+* A C library supporting the deprecated POSIX.1-2001 ucontext library (e.g. glibc, FreeBSD's libc)
 * Optional: GDB for debugging. (Prefer the multiarch version, this will also work for other boards)
 
 The build system                                            {#the-build-system}

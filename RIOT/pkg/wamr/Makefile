@@ -3,8 +3,8 @@ PKG_URL=https://github.com/bytecodealliance/wasm-micro-runtime.git
 ifeq ($(PKG_BLEADING),1)
   PKG_VERSION=main
 else
-  PKG_VERSION=a22a5da40d7c81ebf3ebb26b457439712f5dde56
-  #main 2022-02-09
+  PKG_VERSION=dc4dcc3d6fba42dbe93cf9050fad8e0cfa4b88d0
+  #release tag: WAMR-1.1.1
 endif
 PKG_LICENSE=Apache-2.0
 
@@ -25,7 +25,7 @@ RIOT_INCLUDES = $(filter-out -%,$(subst -I,,$(INCLUDES)))
 
 #translate (CPU_ARCH) to Build Target
 #WAMR_BUILD_TARGET is "X86_32" "AARCH64[sub]", "ARM[sub]",
-#                     "THUMB[sub]", "MIPS" or "XTENSA"
+#                     "THUMB[sub]", "XTENSA"
 #no msp430, no AVR support for now
 
 ifeq ($(CPU),native)
@@ -41,8 +41,6 @@ ifeq ($(findstring aarch,$(OS_ARCH)),aarch)
 endif
 else ifeq ($(findstring arm,$(CPU_ARCH)),arm)
   WAMR_BUILD_TARGET = THUMB
-else ifeq ($(CPU_ARCH),mips32r2)
-  WAMR_BUILD_TARGET = MIPS
 else ifeq ($(CPU_ARCH),xtensa)
   WAMR_BUILD_TARGET = XTENSA
 else ifeq ($(CPU_ARCH),rv32)

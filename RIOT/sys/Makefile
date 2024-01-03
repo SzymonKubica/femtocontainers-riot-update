@@ -5,11 +5,8 @@ endif
 ifneq (,$(filter benchmark_udp,$(USEMODULE)))
   DIRS += test_utils/benchmark_udp
 endif
-ifneq (,$(filter bpf,$(USEMODULE)))
-  DIRS += bpf
-endif
-ifneq (,$(filter sched_rbpf,$(USEMODULE)))
-  DIRS += sched_rbpf
+ifneq (,$(filter bhp,$(USEMODULE)))
+  DIRS += bhp
 endif
 ifneq (,$(filter bluetil_%,$(USEMODULE)))
   DIRS += net/ble/bluetil
@@ -104,11 +101,11 @@ endif
 ifneq (,$(filter l2filter,$(USEMODULE)))
   DIRS += net/link_layer/l2filter
 endif
+ifneq (,$(filter l2scan_list,$(USEMODULE)))
+  DIRS += net/link_layer/l2scan_list
+endif
 ifneq (,$(filter l2util,$(USEMODULE)))
   DIRS += net/link_layer/l2util
-endif
-ifneq (,$(filter log_%,$(USEMODULE)))
-  DIRS += log
 endif
 ifneq (,$(filter nanocoap,$(USEMODULE)))
   DIRS += net/application_layer/nanocoap
@@ -152,6 +149,9 @@ endif
 ifneq (,$(filter sock_dns_mock,$(USEMODULE)))
   DIRS += net/application_layer/sock_dns_mock
 endif
+ifneq (,$(filter sock_dodtls,$(USEMODULE)))
+  DIRS += net/application_layer/sock_dodtls
+endif
 ifneq (,$(filter sock_util,$(USEMODULE)))
   DIRS += net/sock
 endif
@@ -173,8 +173,14 @@ endif
 ifneq (,$(filter posix_sleep,$(USEMODULE)))
   DIRS += posix/sleep
 endif
+ifneq (,$(filter psa_crypto,$(USEMODULE)))
+    DIRS += psa_crypto
+endif
 ifneq (,$(filter pthread,$(USEMODULE)))
   DIRS += posix/pthread
+endif
+ifneq (,$(filter preprocessor_%,$(USEMODULE)))
+  DIRS += preprocessor
 endif
 ifneq (,$(filter routing,$(USEMODULE)))
   DIRS += net/routing
@@ -182,8 +188,8 @@ endif
 ifneq (,$(filter skald,$(USEMODULE)))
   DIRS += net/ble/skald
 endif
-ifneq (,$(filter shell_commands,$(USEMODULE)))
-  DIRS += shell/commands
+ifneq (,$(filter shell_cmds,$(USEMODULE)))
+  DIRS += shell/cmds
 endif
 ifneq (,$(filter suit%,$(USEMODULE)))
   DIRS += suit
@@ -200,11 +206,17 @@ endif
 ifneq (,$(filter test_utils_netdev_eth_minimal,$(USEMODULE)))
   DIRS += test_utils/netdev_eth_minimal
 endif
+ifneq (,$(filter test_utils_netdev_ieee802154_minimal,$(USEMODULE)))
+  DIRS += test_utils/netdev_ieee802154_minimal
+endif
 ifneq (,$(filter test_utils_print_stack_usage,$(USEMODULE)))
   DIRS += test_utils/print_stack_usage
 endif
 ifneq (,$(filter test_utils_result_output,$(USEMODULE)))
   DIRS += test_utils/result_output
+endif
+ifneq (,$(filter tiny_strerror,$(USEMODULE)))
+  DIRS += tiny_strerror
 endif
 ifneq (,$(filter udp,$(USEMODULE)))
   DIRS += net/transport_layer/udp
