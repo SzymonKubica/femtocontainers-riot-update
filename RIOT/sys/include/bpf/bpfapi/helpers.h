@@ -19,7 +19,8 @@ extern "C" {
 #endif
 
 
-typedef signed ssize_t;
+//typedef signed ssize_t;
+
 
 /**
  * Opaque dummy type saul registration

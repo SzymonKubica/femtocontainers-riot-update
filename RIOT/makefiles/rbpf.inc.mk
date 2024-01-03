@@ -6,8 +6,10 @@ RBPF_OBJS = $(RBPF_SOURCES:.c=.o)
 
 LLC ?= llc
 CLANG ?= clang
-INC_FLAGS = -nostdinc -isystem `$(CLANG) -print-file-name=include`
-EXTRA_CFLAGS ?= -Os -emit-llvm
+INC_FLAGS = -isystem `$(CLANG) -print-file-name=include`
+# Old version
+#INC_FLAGS = -nostdinc -isystem `$(CLANG) -print-file-name=include`
+EXTRA_CFLAGS ?= -fno-stack-protector -Os -emit-llvm
 
 RBPFINCLUDE =  -I$(RIOTBASE)/drivers/include \
 	       -I$(RIOTBASE)/core/include \
@@ -22,7 +24,9 @@ all: $(RBPF_BINS)
 clean:
 	rm -f $(RBPF_OBJS)
 
-INC_FLAGS = -nostdinc -isystem `$(CLANG) -print-file-name=include`
+INC_FLAGS = -isystem `$(CLANG) -print-file-name=include`
+# Old version
+#INC_FLAGS = -nostdinc -isystem `$(CLANG) -print-file-name=include`
 
 $(RBPF_OBJS):  %.o:%.c
 	$(CLANG) $(INC_FLAGS) \
