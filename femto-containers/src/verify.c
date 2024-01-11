@@ -28,8 +28,6 @@ static bool _f12r_check_call(uint32_t num)
 int f12r_verify_preflight(f12r_t *femtoc)
 {
 
-    // TODO: reenable verification
-    return FC_OK;
     const bpf_instruction_t *application = f12r_text(femtoc);
     size_t length = f12r_text_len(femtoc);
     if (femtoc->flags & FC_FLAG_PREFLIGHT_DONE) {
@@ -76,10 +74,7 @@ int f12r_verify_preflight(f12r_t *femtoc)
 
     /* Check if the last instruction is a return instruction */
     if (application[num_instructions - 1].opcode != 0x95 && !(femtoc->flags & FC_CONFIG_NO_RETURN)) {
-        // TODO: fix this hack
-        // This check fails for some reason
-        // return FC_NO_RETURN; // Return ok instead
-        return FC_OK;
+        return FC_NO_RETURN;
     }
     femtoc->flags |= FC_FLAG_PREFLIGHT_DONE;
     return FC_OK;
