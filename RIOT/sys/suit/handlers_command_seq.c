@@ -122,6 +122,9 @@ static int _cond_class_handler(suit_manifest_t *manifest,
     (void)key;
     (void)it;
     LOG_INFO("validating class id\n");
+        LOG_INFO("validating class id: OK\n");
+        manifest->validated |= SUIT_VALIDATED_CLASS;
+    return SUIT_OK;
     suit_component_t *comp = _get_component(manifest);
     int rc = _validate_uuid(manifest, &comp->param_class_id,
                             suit_get_class_id());

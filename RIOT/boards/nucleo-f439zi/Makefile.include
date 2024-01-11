@@ -1,5 +1,6 @@
 #variable needed by cpy2remed PROGRAMMER
 #it contains name of ST-Link removable media
+# TODO: changed here as the media name is different for my board.
 DIR_NAME_AT_REMED = "NODE_F439ZI"
 
 PROGRAMMERS_SUPPORTED += cpy2remed

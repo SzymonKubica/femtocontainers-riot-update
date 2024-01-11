@@ -1,6 +1,6 @@
 
 if [[ $# -lt 5 ]] ; then
-    echo 'Usage: sign-binary.sh <network-interface> <sequence-number> <board> <coaproot-dir> <binary-name>'
+    echo 'Usage: sign-binary.sh <host-network-interface> <sequence-number> <board> <coaproot-dir> <binary-name>'
     exit 0
 fi
 
@@ -13,7 +13,10 @@ binary_name=$5
 
 echo "Creating the manifest template"
 ./RIOT/dist/tools/suit/gen_manifest.py --urlroot "coap://[$ip_address]/" --seqnr $sequence_number -o suit.tmp $binary_name:0:ram:0 -C $board
+echo "./RIOT/dist/tools/suit/gen_manifest.py --urlroot \"coap://[$ip_address]/\" --seqnr $sequence_number -o suit.tmp $binary_name:0:ram:0 -C $board"
 echo "Generating the manifest file"
 ./RIOT/dist/tools/suit/suit-manifest-generator/bin/suit-tool create -f suit -i suit.tmp -o $coaproot_dir/suit_manifest
+echo "./RIOT/dist/tools/suit/suit-manifest-generator/bin/suit-tool create -f suit -i suit.tmp -o $coaproot_dir/suit_manifest"
 echo "Signing the manifest file"
 ./RIOT/dist/tools/suit/suit-manifest-generator/bin/suit-tool sign -k RIOT/keys/default.pem -m $coaproot_dir/suit_manifest -o $coaproot_dir/suit_manifest.signed
+echo "./RIOT/dist/tools/suit/suit-manifest-generator/bin/suit-tool sign -k RIOT/keys/default.pem -m $coaproot_dir/suit_manifest -o $coaproot_dir/suit_manifest.signed"

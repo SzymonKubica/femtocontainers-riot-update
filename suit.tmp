@@ -1,6 +1,6 @@
 {
     "manifest-version": 1,
-    "manifest-sequence-number": 2,
+    "manifest-sequence-number": 1,
     "components": [
         {
             "install-id": [
@@ -8,7 +8,7 @@
                 "0"
             ],
             "vendor-id": "547d0d746d3a5a9296624881afd9407b",
-            "class-id": "2ee02a4bfd4a56b69e2d05d31deb9cd2",
+            "class-id": "c6e72c155e725dfba21e9ebec57a1086",
             "file": "coaproot/fletcher-32-checksum.bin",
             "uri": "coap://[fe80::a283:e5fa:d0c4:3235]/fletcher-32-checksum.bin",
             "bootable": false
