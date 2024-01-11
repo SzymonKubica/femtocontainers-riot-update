@@ -96,7 +96,7 @@ static ssize_t _bpf_handler(coap_pkt_t *pdu, uint8_t *buf, size_t len, void *ctx
     int64_t result = -1;
     int res = f12r_execute_ctx(&_bpf, &bpf_ctx, sizeof(bpf_ctx), &result);
 
-    size_t reply_len = fmt_s32_dfp(reply, result, -2);
+    size_t reply_len = fmt_s32_dfp(reply, result, 0);
 
     printf("Execution done res=%i, result=%i\n", res, (int)result);
     return coap_reply_simple(pdu, COAP_CODE_204, buf, len, 0, (uint8_t*)reply, reply_len);

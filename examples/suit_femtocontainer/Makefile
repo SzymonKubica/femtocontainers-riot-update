@@ -30,6 +30,7 @@ USEMODULE += shell_cmds_default
 USEMODULE += shell_cmd_suit
 USEMODULE += bpf
 USEMODULE += gcoap
+USEMODULE += ztimer
 USEPKG += femto-container
 
 USEMODULE += saul

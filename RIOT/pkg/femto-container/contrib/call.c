@@ -168,9 +168,19 @@ uint32_t f12r_vm_ztimer_periodic_wakeup(f12r_t *f12r, uint64_t *regs)
 #endif
 
 
+uint32_t f12r_vm_printf(f12r_t *f12r, uint32_t fmt, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
+{
+    (void)f12r;
+    return printf((char*)(uintptr_t)fmt, a2, a3, a4, a5);
+}
+
+
 f12r_call_t f12r_get_external_call(uint32_t num)
 {
     switch(num) {
+        // TODO: added here (consider this hack)
+        case BPF_FUNC_BPF_PRINTF:
+            return &f12r_vm_printf;
 #ifdef MODULE_SAUL_REG
         case BPF_FUNC_BPF_SAUL_REG_FIND_NTH:
             return &f12r_vm_saul_reg_find_nth;
