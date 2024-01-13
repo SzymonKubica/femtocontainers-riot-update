@@ -2,11 +2,14 @@
 #include <stdint.h>
 #include <string.h>
 
+#define PERIOD_US (1000 * 1000)
+
 int fletcher32_bench(void *ctx)
 {
     (void)ctx;
 
-    // This message was copied from somewhere in riot to replicate their workflow exactly.
+    // This message was copied from somewhere in riot to replicate their
+    // workflow exactly.
     char *message =
         "AD3Awn4kb6FtcsyE0RU25U7f55Yncn3LP3oEx9Gl4qr7iDW7I8L6Pbw9jNnh0sE4DmCKuc"
         "d1J8I34vn31W924y5GMS74vUrZQc08805aj4Tf66HgL1cO94os10V2s2GDQ825yNh9Yuq3"
@@ -48,12 +51,25 @@ int fletcher32_bench(void *ctx)
     uint32_t end = bpf_ztimer_now();
 
     // Play around with the diodes here:
-    bpf_saul_reg_t *sensor;
+    bpf_saul_reg_t *diode;
     phydat_t diode_payload;
-    // 68 is an on-off switch controlling one of the diodes
-    sensor = bpf_saul_reg_find_nth(0);
-    diode_payload.val[0] = 1;
-    bpf_saul_reg_write(sensor, &diode_payload);
+
+    uint32_t last_wakeup = bpf_ztimer_now();
+
+    // Toggle all onboard LEDs in order
+    int diode_index = 0;
+    while (1) {
+        bpf_ztimer_periodic_wakeup(&last_wakeup, PERIOD_US);
+        // First turn off the current diode
+        diode = bpf_saul_reg_find_nth(diode_index);
+        diode_payload.val[0] = 0;
+        bpf_saul_reg_write(diode, &diode_payload);
+        // Now increment the diode index and turn it on
+        diode_index = (diode_index + 1) % 3;
+        diode = bpf_saul_reg_find_nth(diode_index);
+        diode_payload.val[0] = 1;
+        bpf_saul_reg_write(diode, &diode_payload);
+    }
 
     // We return the computation time in microseconds
     return end - start;

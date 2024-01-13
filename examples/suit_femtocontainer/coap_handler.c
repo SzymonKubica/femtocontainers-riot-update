@@ -47,7 +47,7 @@ static f12r_t _bpf = {
     .application_len = 0, /**< Application length */
     .stack = _stack,
     .stack_size = sizeof(_stack),
-    .flags = 0,
+    .flags = FC_CONFIG_NO_RETURN,
     // TODO: set branches rem to something sensible
     .branches_remaining =
         100, /**< Number of allowed branch instructions remaining */

@@ -1,6 +1,6 @@
 {
     "manifest-version": 1,
-    "manifest-sequence-number": 5,
+    "manifest-sequence-number": 8,
     "components": [
         {
             "install-id": [

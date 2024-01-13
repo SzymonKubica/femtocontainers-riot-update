@@ -176,9 +176,18 @@ uint32_t f12r_vm_ztimer_periodic_wakeup(f12r_t *f12r, uint64_t *regs)
 {
     (void)f12r;
 
+    // TODO: figure out why f12r uses registers starting at 0 whereas the compiled
+    // code puts the arument into the register 1
+    /* Old code:
     uint32_t *last = (uint32_t*)(intptr_t)regs[0];
 
     ztimer_periodic_wakeup(ZTIMER_USEC, last, regs[1]);
+    return 0;
+    */
+    // fixed:
+    uint32_t *last = (uint32_t*)(intptr_t)regs[1];
+
+    ztimer_periodic_wakeup(ZTIMER_USEC, last, regs[2]);
     return 0;
 }
 #endif
