@@ -1,6 +1,6 @@
 {
     "manifest-version": 1,
-    "manifest-sequence-number": 10,
+    "manifest-sequence-number": 13,
     "components": [
         {
             "install-id": [
@@ -9,8 +9,8 @@
             ],
             "vendor-id": "547d0d746d3a5a9296624881afd9407b",
             "class-id": "c6e72c155e725dfba21e9ebec57a1086",
-            "file": "coaproot/fletcher-32-checksum.bin",
-            "uri": "coap://[fe80::a283:e5fa:d0c4:3235]/fletcher-32-checksum.bin",
+            "file": "coaproot/saul-diode-write-example.bin",
+            "uri": "coap://[fe80::a283:e5fa:d0c4:3235]/saul-diode-write-example.bin",
             "bootable": false
         }
     ]
