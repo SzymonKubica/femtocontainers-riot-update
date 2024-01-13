@@ -142,6 +142,22 @@ uint32_t bpf_vm_saul_reg_read(bpf_t *bpf, uint32_t dev_p, uint32_t data_p, uint3
     int res = saul_reg_read(dev, data);
     return (uint32_t)res;
 }
+
+uint32_t bpf_vm_saul_reg_write(bpf_t *bpf, uint32_t dev_p, uint32_t data_p, uint32_t a3, uint32_t a4, uint32_t a5)
+{
+    (void)bpf;
+    (void)a3;
+    (void)a4;
+    (void)a5;
+
+    saul_reg_t *dev = (saul_reg_t*)(intptr_t)dev_p;
+    phydat_t *data = (phydat_t*)(intptr_t)data_p;
+
+    // TODO: remove debug code
+    printf("bpf_vm_saul_reg_write: dev=%p, data=%p\n", dev, data);
+    int res = saul_reg_write(dev, data);
+    return (uint32_t)res;
+}
 #endif
 
 #ifdef MODULE_GCOAP

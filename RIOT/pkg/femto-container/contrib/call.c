@@ -43,7 +43,11 @@ uint32_t f12r_vm_memcpy(f12r_t *f12r, uint64_t *regs)
 uint32_t f12r_vm_saul_reg_find_nth(f12r_t *f12r, uint64_t *regs)
 {
     (void)f12r;
-    int pos = (int)regs[0];
+    // The function argument seems to be inserted in regs 1
+    int pos = (int)regs[1];
+    for (int i = 0; i < 5; i++) {
+       printf("bpf_vm_saul_reg_find_nth: reg%d=%d\n", i, regs[i]);
+    }
     saul_reg_t *reg = saul_reg_find_nth(pos);
     return (uint32_t)(intptr_t)reg;
 }
@@ -64,6 +68,18 @@ uint32_t f12r_vm_saul_reg_read(f12r_t *f12r, uint64_t *regs)
     phydat_t *data = (phydat_t*)(intptr_t)regs[1];
 
     int res = saul_reg_read(dev, data);
+    return (uint32_t)res;
+}
+
+uint32_t f12r_vm_saul_reg_write(f12r_t *f12r, uint64_t *regs)
+{
+    (void)f12r;
+
+    saul_reg_t *dev = (saul_reg_t*)(intptr_t)regs[1];
+    phydat_t *data = (phydat_t*)(intptr_t)regs[2];
+
+    printf("bpf_vm_saul_reg_write: dev=%s, data=%d\n", dev->name, data->val[0]);
+    int res = saul_reg_write(dev, data);
     return (uint32_t)res;
 }
 #endif
@@ -178,9 +194,6 @@ uint32_t f12r_vm_printf(f12r_t *f12r, uint32_t fmt, uint32_t a2, uint32_t a3, ui
 f12r_call_t f12r_get_external_call(uint32_t num)
 {
     switch(num) {
-        // TODO: added here (consider this hack)
-        case BPF_FUNC_BPF_PRINTF:
-            return &f12r_vm_printf;
 #ifdef MODULE_SAUL_REG
         case BPF_FUNC_BPF_SAUL_REG_FIND_NTH:
             return &f12r_vm_saul_reg_find_nth;
@@ -188,6 +201,8 @@ f12r_call_t f12r_get_external_call(uint32_t num)
             return &f12r_vm_saul_reg_find_type;
         case BPF_FUNC_BPF_SAUL_REG_READ:
             return &f12r_vm_saul_reg_read;
+        case BPF_FUNC_BPF_SAUL_REG_WRITE:
+            return &f12r_vm_saul_reg_write;
 #endif
 #if 0
 #ifdef MODULE_GCOAP

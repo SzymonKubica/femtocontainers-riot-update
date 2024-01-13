@@ -47,6 +47,14 @@ int fletcher32_bench(void *ctx)
     uint32_t checksum = (c1 << 16 | c0);
     uint32_t end = bpf_ztimer_now();
 
+    // Play around with the diodes here:
+    bpf_saul_reg_t *sensor;
+    phydat_t diode_payload;
+    // 68 is an on-off switch controlling one of the diodes
+    sensor = bpf_saul_reg_find_nth(0);
+    diode_payload.val[0] = 1;
+    bpf_saul_reg_write(sensor, &diode_payload);
+
     // We return the computation time in microseconds
     return end - start;
 }
