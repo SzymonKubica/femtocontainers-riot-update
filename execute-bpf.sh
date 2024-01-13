@@ -8,4 +8,5 @@ network_interface=$1
 ip_address=$2
 slot=$3
 
+echo "aiocoap-client -m POST \"coap://[$ip_address%$network_interface]/bpf/exec/$slot\""
 aiocoap-client -m POST "coap://[$ip_address%$network_interface]/bpf/exec/$slot"

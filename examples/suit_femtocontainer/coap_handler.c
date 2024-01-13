@@ -119,12 +119,25 @@ static ssize_t _bpf_handler(coap_pkt_t *pdu, uint8_t *buf, size_t len,
                              reply_len);
 }
 
+
+static ssize_t _firmware_pull_handler(coap_pkt_t *pdu, uint8_t *buf, size_t len,
+                            void *ctx) {
+
+    char *suit_arg = "coap://[fe80::a283:e5fa:d0c4:3235%5]/suit_manifest.signed";
+    suit_worker_trigger(suit_arg, strlen(suit_arg));
+
+    return coap_reply_simple(pdu, COAP_CODE_204, buf, len, 0, 0,
+                             1);
+}
+
+
 /* must be sorted by path (ASCII order) */
 const coap_resource_t coap_resources[] = {
     COAP_WELL_KNOWN_CORE_DEFAULT_HANDLER,
     {"/bpf/exec/0", COAP_POST, _bpf_handler, ".ram.0"},
     {"/bpf/exec/1", COAP_POST, _bpf_handler, ".ram.1"},
     {"/riot/board", COAP_GET, _riot_board_handler, NULL},
+    {"/pull", COAP_GET, _firmware_pull_handler, NULL},
 
     /* this line adds the whole "/suit"-subtree */
     SUIT_COAP_SUBTREE,

@@ -58,7 +58,9 @@ int fletcher32_bench(void *ctx)
 
     // Toggle all onboard LEDs in order
     int diode_index = 0;
-    while (1) {
+    int count = 0;
+    int max_iterations = 100;
+    while (count++ < max_iterations) {
         bpf_ztimer_periodic_wakeup(&last_wakeup, PERIOD_US);
         // First turn off the current diode
         diode = bpf_saul_reg_find_nth(diode_index);
