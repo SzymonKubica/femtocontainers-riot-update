@@ -1,0 +1,92 @@
+   88  mv flash converter/usb_usb
+   89  chmod +x flash
+  100  cp flash ../../../qmk_firmware/.build
+  101  ./flash converter_usb_usb_hasu_default.hex
+  119  ./flash converter_usb_usb_hasu_converter_usb_usb_hasu_layout_all_mine.hex
+  301  git add .gitignore Cargo.toml flash rust-toolchain.toml src/
+  462  vim flash
+ 1515  cargo install -f ldproxy espflash espmonitor
+ 1520  esptool.py --chip esp32 --port /dev/ttyUSB0 write_flash -z 0x1000 esp32-20220618-v1.19.1.bin
+ 1521  esptool.py --chip esp32 --port /dev/ttyUSB0 write_flash -z 0x1000 firmware/esp32-20220618-v1.19.1.bin
+ 1548  ./flash
+ 1578  cat flash
+ 1591  ./flash converter_usb_usb_hasu_sculpt_keypad_layout.hex
+ 1603  idf flash
+ 1629  idf flash && sleep 1 && idf monitor
+ 1817  cargo flash --release
+ 1835  cargo install ldproxy espup espflash cargo-espflash
+ 1850  cargo install espflash
+ 1851  espflash
+ 1852  cargo install cargo-espflash
+ 1870  cargo espflash flash 
+ 1871  cargo espflash monitor
+ 2172  make all flash BOARD=esp32
+ 2174  make all flash BOARD=esp32-wroom-32
+ 2177  make flash BOARD=esp32-wroom-32
+ 2181  make -C examples/hello-world BOARD=esp32-wroom-32 flash ter
+ 2190  make -C examples/hello-world BOARD=stm32 flash term
+ 2191  make -C examples/hello-world BOARD=nucleo-f439zi flash term
+ 2193  make -C examples/blinky BOARD=nucleo-f439zi term flash
+ 2195  make -C suit_femtocontainer BOARD=nucleo-f439zi term flash
+ 2212  make flash -C suit_femtocontainer BOARD=esp32-wroom-32 
+ 2228  make -C examples/hello-world BOARD=esp32-wroom-32 flash-only
+ 2229  cargo espflash flash --monitor
+ 2231  /home/szymon/Documents/projects/final-year-project/femtocontainers-case-study/middleware2022-femtocontainers/RIOT/dist/tools/esptools/esptool_v3.2.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 --before default_reset write_flash -z --flash_mode dout --flash_freq 40m    0x1000 /home/szymon/Documents/projects/final-year-project/femtocontainers-case-study/middleware2022-femtocontainers/RIOT/cpu/esp32/bin/bootloader.bin 0x8000 /home/szymon/Documents/projects/final-year-project/femtocontainers-case-study/middleware2022-femtocontainers/RIOT/examples/hello-world/bin/esp32-wroom-32/partitions.bin 0x10000 /home/szymon/Documents/projects/final-year-project/femtocontainers-case-study/middleware2022-femtocontainers/RIOT/examples/hello-world/bin/esp32-wroom-32/hello-world.elf.bin
+ 2234  make -C examples/hello-world BOARD=esp32-wroom-32 all flash
+ 2243  make flash BOARD=esp32-wroom-32 -C tests/sys/shell/
+ 2244  make flash BOARD=esp32-wroom-32 -C tests/sys/shell
+ 2245  make flash BOARD=esp32-wroom-32 -C tests/sys_architecture/tests/01-run.py
+ 2246  make flash BOARD=esp32-wroom-32 -C
+ 2248  make flash BOARD=esp32-wroom-32 -C examples/blinky
+ 2249  make flash -C examples/blinky BOARD=esp32-wroom-32
+ 2250  make flash-C examples/hello-world BOARD=esp32-wroom-32
+ 2259  make -C examples/blinky BOARD=esp32-wroom-32 flash
+ 2261  make -C examples/hello-world BOARD=esp32-wroom-32 flash term
+ 2263  make -C examples/hello-world BOARD=esp32-wroom-32 flash
+ 2264  /home/szymon/Documents/projects/final-year-project/RIOT/dist/tools/esptools/esptool_v3.2.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 --before default_reset write_flash -z --flash_mode dout --flash_freq 40m --flash_size detect 0x1000 /home/szymon/Documents/projects/final-year-project/RIOT/examples/hello-world/bin/esp32-wroom-32/esp_bootloader/bootloader.bin 0x8000 /home/szymon/Documents/projects/final-year-project/RIOT/examples/hello-world/bin/esp32-wroom-32/partitions.bin 0x10000 /home/szymon/Documents/projects/final-year-project/RIOT/examples/hello-world/bin/esp32-wroom-32/hello-world.elf.bin
+ 2267  make -C examples/default BOARD=esp32-wroom-32 flash
+ 2286  make -C suit_femtocontainer BOARD=esp32-wroom-32 flash
+ 2289  make -C suit_femtocontainer BOARD=esp32-wroom-32 flash term
+ 2291  make -C suit_femtocontainer BOARD=nucleo-f439zi flash term
+ 2292  make -C suit_femtocontainer BOARD=nucleo-f439zi flash
+ 2295  make flash -C examples/hello-world BOARD=esp32-wroom-32
+ 2296  make flash -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 term
+ 2297  make flash -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32
+ 2300  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make ../examples/suit_femtocontainer BOARD=esp32-wroom-32 flash
+ 2308  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 flash
+ 2375  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/gcoap BOARD=esp32-wroom-32 flash term
+ 2384  PORT=tap1 USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/gcoap BOARD=esp32-wroom-32 flash term
+ 2385  PORT=tap1 USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/gnrc_networking BOARD=esp32-wroom-32 flash term
+ 2387  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/gnrc_border_router BOARD=esp32-wroom-32 flash term
+ 2634  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' bear -- make -C examples/suit_femtocontainer BOARD=esp32-wroom-32 flash
+ 2635  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 flash term\n
+ 2641  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer flash
+ 2666  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/suit_femtocontainer BOARD=esp32-wroom-32 flash term
+ 2667  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 flash term
+ 2685  make -C ../examples/suit_femtocontainer BOARD=stm32 flash term
+ 2696  make -C ../examples/suit_femtocontainer BOARD=nucleo-f429zi PROGRAMMER=cpy2remed flash term
+ 2699  make -C ../examples/suit_femtocontainer BOARD=nucleo-f429zi PROGRAMMER=cpy2remed flash
+ 2700  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=cpy2remed flash
+ 2701  stm23flash
+ 2702  stm32-flash
+ 2711  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=stm32loader flash term
+ 2712  stm32flash -o
+ 2723  stm32flash -o /dev/ttyACM0
+ 2724  sudo stm32flash -o /dev/ttyACM0
+ 2725  stm32flash
+ 2726  stm32flash /dev/ttyACM0
+ 2728  st-flash erease
+ 2730  sudo st-flash erease
+ 2731  man st-flash
+ 2732  make -C ../examples/suit_femtocontainer BOARD=nucleo-f429zi flash term
+ 2733  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=cpy2remed flash term
+ 2734  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=st-flash flash term
+ 2735  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=stm32flash flash term
+ 2736  st-flash
+ 2737  st-flash --debug
+ 2738  sudo make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=stm32flash flash term
+ 2739  sudo make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=stm32flash term
+ 2740  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi flash term
+ 2778  st-flash erase
+ 2779  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi flash
+ 2797  st-flash write /home/szymon/Documents/projects/final-year-project/femtocontainers-case-study/middleware2022-femtocontainers-new-RIOT/examples/suit_femtocontainer/bin/nucleo-f439zi/suit_femtocontainer.bin 0x8000000
