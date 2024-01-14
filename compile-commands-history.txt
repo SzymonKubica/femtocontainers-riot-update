@@ -1,0 +1,145 @@
+ 2172  make all flash BOARD=esp32
+ 2174  make all flash BOARD=esp32-wroom-32
+ 2177  make flash BOARD=esp32-wroom-32
+ 2181  make -C examples/hello-world BOARD=esp32-wroom-32 flash ter
+ 2182  make print-versions
+ 2190  make -C examples/hello-world BOARD=stm32 flash term
+ 2191  make -C examples/hello-world BOARD=nucleo-f439zi flash term
+ 2192  make -C examples/hello-world BOARD=nucleo-f439zi term
+ 2193  make -C examples/blinky BOARD=nucleo-f439zi term flash
+ 2195  make -C suit_femtocontainer BOARD=nucleo-f439zi term flash
+ 2199  make -C suit_femtocontainer BOARD=nucleo-f439zi term
+ 2210  make -C suit_femtocontainer BOARD=esp32-wroom32 all
+ 2211  make -C suit_femtocontainer BOARD=esp32-wroom32
+ 2212  make flash -C suit_femtocontainer BOARD=esp32-wroom-32
+ 2226  make term
+ 2227  make -C examples/hello-world BOARD=esp32-wroom-32 all
+ 2228  make -C examples/hello-world BOARD=esp32-wroom-32 flash-only
+ 2234  make -C examples/hello-world BOARD=esp32-wroom-32 all flash
+ 2242  make -C fc
+ 2243  make flash BOARD=esp32-wroom-32 -C tests/sys/shell/
+ 2244  make flash BOARD=esp32-wroom-32 -C tests/sys/shell
+ 2245  make flash BOARD=esp32-wroom-32 -C tests/sys_architecture/tests/01-run.py
+ 2246  make flash BOARD=esp32-wroom-32 -C
+ 2248  make flash BOARD=esp32-wroom-32 -C examples/blinky
+ 2249  make flash -C examples/blinky BOARD=esp32-wroom-32
+ 2250  make flash-C examples/hello-world BOARD=esp32-wroom-32
+ 2251  make -C examples/hello-world BOARD=esp32-wroom-32 WERROR=0
+ 2253  make -C examples/hello-world BOARD=esp32-wroom-32 -Wno-error
+ 2258  make -C examples/blinky BOARD=esp32-wroom-32
+ 2259  make -C examples/blinky BOARD=esp32-wroom-32 flash
+ 2260  make -C examples/blinky BOARD=esp32-wroom-32 term
+ 2261  make -C examples/hello-world BOARD=esp32-wroom-32 flash term
+ 2262  make -C examples/hello-world BOARD=esp32-wroom-32
+ 2263  make -C examples/hello-world BOARD=esp32-wroom-32 flash
+ 2265  make -C suit_femtocontainer BOARD=esp32
+ 2266  make -C examples/hello-world BOARD=esp32-wroom-32 term
+ 2267  make -C examples/default BOARD=esp32-wroom-32 flash
+ 2269  make -C examples/default BOARD=esp32-wroom-32 term
+ 2280  make -C suit_femtocontainer BOARD=esp32-wroom-32
+ 2286  make -C suit_femtocontainer BOARD=esp32-wroom-32 flash
+ 2287  make -C suit_femtocontainer BOARD=esp32-wroom-32 term
+ 2288  make -C suit_femtocontainer BOARD=esp32-wroom-32 all
+ 2289  make -C suit_femtocontainer BOARD=esp32-wroom-32 flash term
+ 2291  make -C suit_femtocontainer BOARD=nucleo-f439zi flash term
+ 2292  make -C suit_femtocontainer BOARD=nucleo-f439zi flash
+ 2293  make -C suit_femtocontainer
+ 2294  make -C ../examples/suit_femtocontainer
+ 2295  make flash -C examples/hello-world BOARD=esp32-wroom-32
+ 2296  make flash -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 term
+ 2297  make flash -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32
+ 2298  make -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 term
+ 2300  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make ../examples/suit_femtocontainer BOARD=esp32-wroom-32 flash
+ 2308  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 flash
+ 2309  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 term
+ 2320  make -C examples/suit_femtocontainer/bpf BOARD=esp32-wroom-32
+ 2321  make -C examples/suit_femtocontainer/bpf BOARD=esp32-wroom-32 clean
+ 2322  make examples/suit_femtocontainer/bpf BOARD=esp32-wroom-32 clean
+ 2323  make -C examples/suit_femtocontainer BOARD=esp32-wroom-32 all
+ 2324  make -C examples/suit_femtocontainer BOARD=esp32-wroom-32 term
+ 2328  make -C examples/suit_femtocontainer term
+ 2329  make examples/suit_femtocontainer BOARD=esp32-wroom-32 clean
+ 2331  make clean
+ 2332  cp makefiles/rbpf.inc.mk ../../middleware2022-femtocontainers-new-RIOT/RIOT/makefiles/
+ 2342  make -C suit/genkey
+ 2344  make -C ../examples/suit_femtocontainer/ BOARD=esp32-wroom-32 suit/genkey
+ 2345  BOARD=esp-wroom-32 make -C examples/suit_update suit/genkey
+ 2346  BOARD=esp32-wroom-32 make -C examples/suit_update suit/genkey
+ 2375  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/gcoap BOARD=esp32-wroom-32 flash term
+ 2381  PORT=tap0 make examples/gnrc_networking term
+ 2382  PORT=tap0 make examples/gnrc_networking all term
+ 2383  PORT=tap0 make -C examples/gnrc_networking all term
+ 2384  PORT=tap1 USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/gcoap BOARD=esp32-wroom-32 flash term
+ 2385  PORT=tap1 USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/gnrc_networking BOARD=esp32-wroom-32 flash term
+ 2387  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/gnrc_border_router BOARD=esp32-wroom-32 flash term
+ 2397  make
+ 2398  make -C bpf BOARD=esp32-wroom-32
+ 2399  make -C bpf
+ 2402  make BOARD=esp32-wroom-32
+ 2406  make -C ../examples/suit_femtocontainer term
+ 2407  make -C ../examples/suit_femtocontainer all BOARD=native term PORT=tap0
+ 2440  make -C ../examples/suit_femtocontainer all BOARD=native term PORT=tap1
+ 2447  make -C examples/suit_femtocontainer/
+ 2449  make -C examples/suit_femtocontainer/bpf BOARD=native
+ 2454  make -C ../examples/suit_femtocontainer all term
+ 2457  make -C ../examples/suit_femtocontainer all BOARD=native term
+ 2513  make -C ../examples/suit_femtocontainer/bpf
+ 2514  make -C /examples/suit_femtocontainer/bpf
+ 2517  make -C examples/suit_femtocontainer/bpf
+ 2625  make -C examples/suit_femtocontainer/bpf clean
+ 2626  bear -- make -C examples/suit_femtocontainer/bpf clean
+ 2627  bear -- make -C examples/suit_femtocontainer/bpf
+ 2629  bear -- make -C examples/suit_femtocontainer term
+ 2630  bear -- make -C examples/suit_femtocontainer
+ 2631  history 0 | make
+ 2632  bear -- USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/suit_femtocontainer BOARD=esp32-wroom-32
+ 2633  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' bear -- make -C examples/suit_femtocontainer BOARD=esp32-wroom-32
+ 2634  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' bear -- make -C examples/suit_femtocontainer BOARD=esp32-wroom-32 flash
+ 2635  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 flash term\n
+ 2636  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 clean
+ 2641  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer flash
+ 2642  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer
+ 2643  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer clean
+ 2644  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer
+ 2646  make -C ../examples/suit_femtocontainer BOARD=native
+ 2647  bear -- make -C ../examples/suit_femtocontainer BOARD=native
+ 2650  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer all term
+ 2651  bear -- USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer all
+ 2652  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' bear --  make -C ../examples/suit_femtocontainer all
+ 2654  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' bear --  make -C ../examples/suit_femtocontainer compile-commands
+ 2655  make compile-commands
+ 2666  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C examples/suit_femtocontainer BOARD=esp32-wroom-32 flash term
+ 2667  USEMODULE=esp_wifi CFLAGS='-DWIFI_SSID=\"RK\" -DWIFI_PASS=\"rjsb62930\"' make -C ../examples/suit_femtocontainer BOARD=esp32-wroom-32 flash term
+ 2673  make examples/suit_femtocontainer/bpf clean
+ 2674  make examples/suit_femtocontainer/bpf -C clean
+ 2675  make examples/suit_femtocontainer/bpf -C
+ 2685  make -C ../examples/suit_femtocontainer BOARD=stm32 flash term
+ 2695  make -C ../examples/suit_femtocontainer BOARD=nucleo-f429zi PROGRAMMER=cpy2remed clean
+ 2696  make -C ../examples/suit_femtocontainer BOARD=nucleo-f429zi PROGRAMMER=cpy2remed flash term
+ 2699  make -C ../examples/suit_femtocontainer BOARD=nucleo-f429zi PROGRAMMER=cpy2remed flash
+ 2700  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=cpy2remed flash
+ 2711  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=stm32loader flash term
+ 2732  make -C ../examples/suit_femtocontainer BOARD=nucleo-f429zi flash term
+ 2733  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=cpy2remed flash term
+ 2734  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=st-flash flash term
+ 2735  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=stm32flash flash term
+ 2738  sudo make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=stm32flash flash term
+ 2739  sudo make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi PROGRAMMER=stm32flash term
+ 2740  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi flash term
+ 2763  make -C bpf
+ 2764  make -C bpf compile-commands
+ 2766  make -C bpf clean
+ 2768  make -c examples/suit_femtocontainer/ compile-commands
+ 2769  bear -- make -C bpf clean
+ 2770  bear -- make -C bpf
+ 2774  make -C examples/suit_femtocontainer/bpf
+ 2779  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi flash
+ 2783  make compile-commands BOARD=native
+ 2784  make -C RIOT compile-commands
+ 2789  make -C examples/suit_femtocontainer/ compile-commands
+ 2796  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi all
+ 2798  make -C ../examples/suit_femtocontainer BOARD=nucleo-f439zi term
+ 2839  make -C RIOT/examples/rust-hello-world
+ 2848  sudo  pacman -S base-devel llvm clang cmake openssl python
+ 2849  cmake --version
+ 2922  history 0 | grep make
